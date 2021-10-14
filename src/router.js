@@ -20,13 +20,19 @@ export default new Router({
         {
           path: '/cong-dan',
           name: 'CongDan',
-          component: () => import('@/views/CongDan'),
+          component: () => import('@/views/cong-dan/DanhSachCongDan'),
           props: true
         },
         {
-          path: '/doanh-nghiep',
-          name: 'DoanhNghiep',
-          component: () => import('@/views/DoanhNghiep'),
+          path: '/chi-tiet-cong-dan/:id',
+          name: 'ChiTietCongDan',
+          component: () => import('@/views/cong-dan/ChiTietCongDan'),
+          props: true
+        },
+        {
+          path: '/chinh-sua-cong-dan/:id',
+          name: 'ChinhSuaCongDan',
+          component: () => import('@/views/cong-dan/EditCongDan'),
           props: true
         },
       ],
@@ -35,6 +41,11 @@ export default new Router({
       name: 'Login',
       path: '/login',
       component: () => import('@/views/Login')
-    }
+    },
+    {
+      name: 'CongDan',
+      path: '/cong-dan',
+      component: () => import('@/views/cong-dan/DanhSachCongDan')
+    },
   ]
 })
