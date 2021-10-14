@@ -3,15 +3,24 @@
         <v-container>
             <v-layout wrap>
                 <v-flex xs12 class="px-2 mb-4">
-                    <h3>TÌM KIẾM THÔNG TIN CÔNG DÂN</h3>  
+                    <h3 style="color: #863E3B">TÌM KIẾM THÔNG TIN CÔNG DÂN</h3>  
                 </v-flex>
                 <v-flex xs12>
                     <v-layout wrap>
                         <v-flex xs12 md3 px-2>
                             <v-text-field
                                 v-model="name"
-                                label="Name"
-                                required
+                                label="CMND/CCCD"
+                                outlined
+                                dense
+                                clearable
+                                max
+                            ></v-text-field>
+                        </v-flex>
+                        <v-flex xs12 md3 px-2>
+                            <v-text-field
+                                v-model="name"
+                                label="Họ tên"
                                 outlined
                                 dense
                                 clearable
@@ -20,8 +29,7 @@
                         <v-flex xs12 md3 px-2>
                             <v-text-field
                                 v-model="name"
-                                label="Name"
-                                required
+                                label="Điện thoại"
                                 outlined
                                 dense
                                 clearable
@@ -30,8 +38,7 @@
                         <v-flex xs12 md3 px-2>
                             <v-text-field
                                 v-model="name"
-                                label="Name"
-                                required
+                                label="Email"
                                 outlined
                                 dense
                                 clearable
@@ -40,18 +47,7 @@
                         <v-flex xs12 md3 px-2>
                             <v-text-field
                                 v-model="name"
-                                label="Name"
-                                required
-                                outlined
-                                dense
-                                clearable
-                            ></v-text-field>
-                        </v-flex>
-                        <v-flex xs12 md3 px-2>
-                            <v-text-field
-                                v-model="name"
-                                label="Name"
-                                required
+                                label="Tình trạng"
                                 outlined
                                 dense
                                 clearable
@@ -70,7 +66,7 @@
                             ></v-checkbox>
                         </v-flex>
                         <v-flex xs12 md3 px-2 class="text-right">
-                            <v-btn color="#0072bc" small class="mt-3 mx-3">
+                            <v-btn color="primary" small class="mt-3 mx-3 text-white">
                                 Tìm kiếm
                             </v-btn>
                         </v-flex>
@@ -105,7 +101,7 @@
                             <template v-slot:item.action="{ item }">
                                 <div style="width: 130px">
                                     <router-link
-                                        to="/foo"
+                                        to="/chi-tiet-cong-dan/2"
                                         custom
                                     >
                                         <span>Xem chi tiết</span>
@@ -113,7 +109,7 @@
                                 </div>
                             </template>
                         </v-data-table>
-                        <pagination v-if="pageCount" :pageInput="page" :pageCount="pageCount" @tiny:change-page="changePage"></pagination>
+                        <pagination v-if="pageCount" :pageInput="page" :pageCount="pageCount"></pagination>
                     </v-card>
 
                 </v-flex>
