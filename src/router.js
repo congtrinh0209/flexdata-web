@@ -8,6 +8,30 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
+      path: '/',
+      component: () => import('@/views/Home'),
+      children: [
+        {
+          path: '/danh-muc',
+          name: 'DanhMuc',
+          component: () => import('@/views/DanhMuc'),
+          props: true
+        },
+        {
+          path: '/cong-dan',
+          name: 'CongDan',
+          component: () => import('@/views/CongDan'),
+          props: true
+        },
+        {
+          path: '/doanh-nghiep',
+          name: 'DoanhNghiep',
+          component: () => import('@/views/DoanhNghiep'),
+          props: true
+        },
+      ],
+    },
+    {
       name: 'Login',
       path: '/login',
       component: () => import('@/views/Login')
