@@ -27,7 +27,11 @@ export default {
     //
   }),
   created () {
-    this.$router.push({ path: '/danh-muc' })
+    let router = this.$router.history.current
+    console.log('router', router)
+    if (router.path === '/') {
+      this.$router.push({ path: '/danh-muc' })
+    }
   }
 };
 </script>

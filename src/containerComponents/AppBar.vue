@@ -47,14 +47,14 @@
           title: 'Công dân',
           class: 'congdan-tab',
           id: 'congdan-tab-id',
-          to: '/cong-dan'
+          to: '/tai-khoan/cong-dan'
         },
         {
           icon: '',
           title: 'Tổ chức doanh nghiệp',
           class: 'doanhnghiep-tab',
           id: 'doanhnghiep-tab-id',
-          to: '/doanh-nghiep'
+          to: '/tai-khoan/doanh-nghiep'
         },
       ]
     }),

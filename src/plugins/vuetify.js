@@ -5,4 +5,11 @@ import '@/sass/overrides.sass'
 Vue.use(Vuetify);
 
 export default new Vuetify({
+    theme: {
+        themes: {
+          light: {
+            primary: '#863E3B',
+          },
+        },
+      },
 });
