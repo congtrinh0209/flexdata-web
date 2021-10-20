@@ -1,193 +1,223 @@
 <template>
     <div>
-        <v-container>
+        <v-row>
+            <v-col cols="12" md="8">
+                <div class="d-flex justify-space-between mb-4">
+                    <h3 style="color: #863E3B">THÔNG TIN CÔNG DÂN</h3>
+                </div>
+            </v-col>
+        </v-row>
+        <v-form lazy-validation>
             <v-row>
-                <v-col cols="12" md="8">
-                    <div class="d-flex justify-space-between mb-4">
-                        <h3 style="color: #863E3B">THÔNG TIN CÔNG DÂN</h3>
-                    </div>
+                <v-col cols="12" md="6" class="py-0">
+                    <label>Họ tên</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="name"
+                        solo
+                        dense
+                        clearable
+                        max
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6" class="py-0">
+                    <label>CMND/CCCD</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="name"
+                        solo
+                        dense
+                        clearable
+                        max
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="3" class="py-0">
+                    <label>Ngày sinh</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="name"
+                        solo
+                        dense
+                        clearable
+                        max
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="3" class="py-0">
+                    <label>Giới tính</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="name"
+                        solo
+                        dense
+                        clearable
+                        max
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="3" class="py-0">
+                    <label>Dân tộc</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="name"
+                        solo
+                        dense
+                        clearable
+                        max
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="3" class="py-0">
+                    <label>Quốc tịch</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="name"
+                        solo
+                        dense
+                        clearable
+                        max
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6" class="py-0">
+                    <label>Email</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="name"
+                        solo
+                        dense
+                        clearable
+                        max
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="3" class="py-0">
+                    <label>Điện thoại</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="name"
+                        solo
+                        dense
+                        clearable
+                        max
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="3" class="py-0">
+                    <label>Tôn giáo</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="name"
+                        solo
+                        dense
+                        clearable
+                        max
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" class="py-0">
+                    <label>Địa chỉ thường trú</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="name"
+                        solo
+                        dense
+                        clearable
+                        max
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="4" class="py-0">
+                    <label>CMND/CCCD</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="name"
+                        solo
+                        dense
+                        clearable
+                        max
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="4" class="py-0">
+                    <label>Quận / Huyện</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="name"
+                        solo
+                        dense
+                        clearable
+                        max
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="4" class="py-0">
+                    <label>Phường / Xã</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="name"
+                        solo
+                        dense
+                        clearable
+                        max
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" class="py-0">
+                    <label>Địa chỉ hiện tại</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="name"
+                        solo
+                        dense
+                        clearable
+                        max
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="4" class="py-0">
+                    <label>Tỉnh thành</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="name"
+                        solo
+                        dense
+                        clearable
+                        max
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="4" class="py-0">
+                    <label>Quận / Huyện</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="name"
+                        solo
+                        dense
+                        clearable
+                        max
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="4" class="py-0">
+                    <label>Phường / Xã</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="name"
+                        solo
+                        dense
+                        clearable
+                        max
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" class="text-center">
+                    <v-btn color="primary" outlined class="mt-3 mx-2  text-white">
+                        <v-icon
+                            left
+                            dark
+                        >
+                            mdi-content-save
+                        </v-icon>
+                        Lưu
+                    </v-btn>
+                    <v-btn color="primary" class="mt-3 mx-2  text-white">
+                        <v-icon
+                            left
+                            dark
+                        >
+                            mdi-arrow-left-top-bold
+                        </v-icon>
+                        Quay lại
+                    </v-btn>
                 </v-col>
             </v-row>
-            <v-form lazy-validation>
-                <v-row>
-                    <v-col cols="12" md="6" class="py-0">
-                        <v-text-field
-                            v-model="name"
-                            label="Họ tên"
-                            outlined
-                            dense
-                            clearable
-                            max
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" class="py-0">
-                        <v-text-field
-                            v-model="name"
-                            label="CMND/CCCD"
-                            outlined
-                            dense
-                            clearable
-                            max
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="3" class="py-0">
-                        <v-text-field
-                            v-model="name"
-                            label="Ngày sinh"
-                            outlined
-                            dense
-                            clearable
-                            max
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="3" class="py-0">
-                        <v-text-field
-                            v-model="name"
-                            label="Giới tính"
-                            outlined
-                            dense
-                            clearable
-                            max
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="3" class="py-0">
-                        <v-text-field
-                            v-model="name"
-                            label="Dân tộc"
-                            outlined
-                            dense
-                            clearable
-                            max
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="3" class="py-0">
-                        <v-text-field
-                            v-model="name"
-                            label="Quốc tịch"
-                            outlined
-                            dense
-                            clearable
-                            max
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="6" class="py-0">
-                        <v-text-field
-                            v-model="name"
-                            label="Email"
-                            outlined
-                            dense
-                            clearable
-                            max
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="3" class="py-0">
-                        <v-text-field
-                            v-model="name"
-                            label="Điện thoại"
-                            outlined
-                            dense
-                            clearable
-                            max
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="3" class="py-0">
-                        <v-text-field
-                            v-model="name"
-                            label="Tôn giáo"
-                            outlined
-                            dense
-                            clearable
-                            max
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" class="py-0">
-                        <v-text-field
-                            v-model="name"
-                            label="Địa chỉ thường trú"
-                            outlined
-                            dense
-                            clearable
-                            max
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="4" class="py-0">
-                        <v-text-field
-                            v-model="name"
-                            label="Tỉnh thành"
-                            outlined
-                            dense
-                            clearable
-                            max
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="4" class="py-0">
-                        <v-text-field
-                            v-model="name"
-                            label="Quận / Huyện"
-                            outlined
-                            dense
-                            clearable
-                            max
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="4" class="py-0">
-                        <v-text-field
-                            v-model="name"
-                            label="Phường / Xã"
-                            outlined
-                            dense
-                            clearable
-                            max
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" class="py-0">
-                        <v-text-field
-                            v-model="name"
-                            label="Địa chỉ hiện tại"
-                            outlined
-                            dense
-                            clearable
-                            max
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="4" class="py-0">
-                        <v-text-field
-                            v-model="name"
-                            label="Tỉnh thành"
-                            outlined
-                            dense
-                            clearable
-                            max
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="4" class="py-0">
-                        <v-text-field
-                            v-model="name"
-                            label="Quận / Huyện"
-                            outlined
-                            dense
-                            clearable
-                            max
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="4" class="py-0">
-                        <v-text-field
-                            v-model="name"
-                            label="Phường / Xã"
-                            outlined
-                            dense
-                            clearable
-                            max
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" class="text-center">
-                        <v-btn color="primary" class="mt-3  text-white">
-                            Lưu
-                        </v-btn>
-                    </v-col>
-                </v-row>
-            </v-form>
-        </v-container>
+        </v-form>
     </div>
 </template>
 
