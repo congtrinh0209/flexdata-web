@@ -1,11 +1,11 @@
 <template>
     <div>
         <v-row align-content="center">
-            <v-col cols="12">
-                <h3 style="color: #863E3B" v-if="type === 'cong-dan'">TÌM KIẾM THÔNG TIN CÔNG DÂN</h3>
-                <h3 style="color: #863E3B" v-else>TÌM KIẾM THÔNG TIN TỔ CHỨC, DOANH NGHIỆP</h3>  
+            <v-col cols="12" class="mt-0 pb-2">
+                <div style="color: #863E3B;font-size: 16px;font-weight: bold;" v-if="type === 'cong-dan'">TÌM KIẾM THÔNG TIN CÔNG DÂN</div>
+                <div style="color: #863E3B;font-size: 16px;font-weight: bold;" v-else>TÌM KIẾM THÔNG TIN TỔ CHỨC, DOANH NGHIỆP</div>  
             </v-col>
-            <v-col cols="12" md="3">
+            <v-col cols="12" md="3" class="my-0 py-0">
                 <label>CMND/CCCD</label>
                 <v-text-field
                     class="input-form"
@@ -14,9 +14,10 @@
                     dense
                     clearable
                     max
+                    hide-details="auto"
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" md="3">
+            <v-col cols="12" md="3" class="my-0 py-0">
                 <label>Họ tên</label>
                 <v-text-field
                     class="input-form"
@@ -25,9 +26,10 @@
                     dense
                     clearable
                     max
+                    hide-details="auto"
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" md="3">
+            <v-col cols="12" md="3" class="my-0 py-0">
                 <label>Điện thoại</label>
                 <v-text-field
                     class="input-form"
@@ -36,9 +38,10 @@
                     dense
                     clearable
                     max
+                    hide-details="auto"
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" md="3">
+            <v-col cols="12" md="3" class="my-0 py-0">
                 <label>Email</label>
                 <v-text-field
                     class="input-form"
@@ -47,20 +50,22 @@
                     dense
                     clearable
                     max
+                    hide-details="auto"
                 ></v-text-field>
             </v-col>
         </v-row>
-        <v-row justify="center">
-            <v-col cols="12" md="6">
+        <v-row justify="center" class="mt-0">
+            <v-col cols="12" md="6" class="py-4">
                 <label>Tình trạng</label>
                 <div class="d-flex">
                     <v-checkbox
                             inline
-                            class="mr-13"
+                            class="mr-13 mt-0"
                             v-model="daCapTaiKhoan"
                             label="Đã cấp tài khoản"
                         ></v-checkbox>
                         <v-checkbox
+                            class="mt-0"
                             inline
                             v-model="chuaCapTaiKhoan"
                             label="Chưa cấp tài khoản"
@@ -68,26 +73,26 @@
                 </div>
             </v-col>
             <v-col cols="12" md="6" class="d-flex align-center justify-end">
-                <v-btn color="primary" flat class="mt-3 mx-3 text-white">
+                <v-btn color="primary" flat class="mt-3 mx-0 text-white">
                     Tìm kiếm
                 </v-btn>
             </v-col>
         </v-row>
         <v-row>
-            <v-col cols="12">
+            <v-col cols="12" class="pt-0">
                 <v-card
-                    class="mx-auto pa-6"
+                    class="mx-auto pa-3"
                     outlined
                     flat
                 >
-                    <strong>Kết quả: {{ total }} bản ghi</strong>
+                    <strong>Số lượng: {{ total }}</strong>
                     <v-data-table
                         flat
                         :headers="headers"
                         :items="items"
                         :items-per-page="itemsPerPage"
                         hide-default-footer
-                        class="elevation-1"
+                        class="elevation-1 mt-2"
                         no-data-text="Không có"
                         :loading="loadingData"
                         loading-text="Đang tải... "
@@ -101,7 +106,7 @@
                             </div>
                         </template>
                         <template v-slot:item.action="{ item }">
-                            <div style="width: 130px">
+                            <div>
                                 <router-link
                                     to="/thong-tin-tai-khoan/2"
                                     custom
@@ -164,7 +169,7 @@ export default {
                 {
                     sortable: false,
                     text: 'Thao tác',
-                    align: 'left',
+                    align: 'center',
                     value: 'action'
                 },
             ],

@@ -3,24 +3,24 @@
         <v-row>
             <v-col cols="12" md="8">
                 <div class="d-flex justify-space-between mb-4">
-                    <h3 style="color: #863E3B">THÔNG TIN CÔNG DÂN</h3>
+                    <div style="color: #863E3B;font-size: 16px;font-weight: bold;">THÔNG TIN CÔNG DÂN</div>
                     <div>
                         <v-btn
-                            class="mx-2"
+                            class="mx-0"
                             small
-                            text
-                            color="gray"
+                            color="primary"
                             @click="editCongDan(1)"
                         >
-                            <v-icon>mdi-pencil-outline</v-icon>
+                            <v-icon size="18">mdi-pencil-outline</v-icon>&nbsp;
+                            Cập nhật thông tin
                         </v-btn>
-                        <v-btn
+                        <!-- <v-btn
                             small
                             text
                             color="gray"
                         >
                             <v-icon>mdi-content-save</v-icon>
-                        </v-btn>
+                        </v-btn> -->
                     </div>
                 </div>
                 <div>
@@ -45,71 +45,56 @@
                             </tbody>
                         </template>
                     </v-simple-table>
-                    <div class="pa-2 mt-4">
-                        <v-data-table
-                            flat
-                            :headers="headers"
-                            :items="items"
-                            :items-per-page="itemsPerPage"
-                            hide-default-footer
-                            class="elevation-1"
-                            no-data-text="Không có"
-                            :loading="loadingData"
-                            loading-text="Đang tải... "
-                        >
-                            <template v-slot:item.index="{ item, index }">
-                                <div>{{ (page+1) * itemsPerPage - itemsPerPage + index + 1 }}</div>
-                            </template>
-                            <template v-slot:item.action="{ item }">
-                                <div style="width: 130px">
-                                    <v-btn
-                                        class="mx-2"
-                                        small
-                                        text
-                                        color="gray"
-                                    >
-                                        <v-icon>mdi-pencil-outline</v-icon>
-                                    </v-btn>
-                                </div>
-                            </template>
-                        </v-data-table>
-                        <pagination v-if="pageCount" :pageInput="page" :pageCount="pageCount"></pagination>
-                    </div>
+                </div>
+                <div style="color: #863E3B;font-size: 16px;font-weight: bold;" class="mt-3">GIẤY TỜ, TÀI LIỆU</div>
+                <div class="px-0 mt-4">
+                    <v-data-table
+                        flat
+                        :headers="headers"
+                        :items="items"
+                        :items-per-page="itemsPerPage"
+                        hide-default-footer
+                        class="elevation-1"
+                        no-data-text="Không có"
+                        :loading="loadingData"
+                        loading-text="Đang tải... "
+                    >
+                        <template v-slot:item.index="{ item, index }">
+                            <div>{{ (page+1) * itemsPerPage - itemsPerPage + index + 1 }}</div>
+                        </template>
+                        <template v-slot:item.action="{ item }">
+                            <div>
+                                <v-btn
+                                    class="mx-2"
+                                    small
+                                    text
+                                    color="#863e3b"
+                                >
+                                    <v-icon>mdi-pencil-outline</v-icon>
+                                </v-btn>
+                            </div>
+                        </template>
+                    </v-data-table>
+                    <pagination v-if="pageCount" :pageInput="page" :pageCount="pageCount"></pagination>
                 </div>
             </v-col>
-            <v-col cols="12" md="4">
+            <v-col cols="12" md="4" class="mt-2">
                 <v-card class="pt-4">
                     <div class="d-flex align-center flex-column">
                         <img class="mb-4" style="width: 226px; height: 226px;" src="/images/avt.png" alt="">
                         <h4 style="color: #863E3B">THÔNG TIN TÀI KHOẢN</h4>
-                        <v-layout class="mt-4" wrap style="width: 300px;">
-                            <v-flex xs6><strong>Tên đăng nhập</strong></v-flex>
-                            <v-flex xs6>
-                            <v-text-field
-                                class="input-form"
-                                v-model="name"
-                                placeholder="Tên đăng nhập"
-                                solo
-                                dense
-                                clearable
-                                max
-                            ></v-text-field>
+                        <v-layout class="mt-4" wrap style="width: 350px;">
+                            <v-flex xs5>Tên đăng nhập:</v-flex>
+                            <v-flex xs7 class="mb-2">
+                                <span class="font-weight-bold">Nguyễn Văn A</span>
                             </v-flex>
-                            <v-flex xs6><strong>Trạng thái</strong></v-flex>
-                            <v-flex xs6>
-                                <v-text-field
-                                class="input-form"
-                                v-model="name"
-                                placeholder="12345432"
-                                solo
-                                dense
-                                clearable
-                                max
-                            ></v-text-field>
+                            <v-flex xs5>Trạng thái:</v-flex>
+                            <v-flex xs7>
+                                <span class="font-weight-bold">Đang hoạt động</span>
                             </v-flex>
                         </v-layout>
                         <div class="d-flex justify-space-between w-full pa-4 ">
-                            <v-btn color="primary" flat small class="mt-3 mx-3 text-white">
+                            <v-btn color="primary" small class="mt-3 mx-3 text-white">
                                 Đổi mật khẩu
                             </v-btn>
                             <v-btn color="primary" small class="mt-3 mx-3 text-white">
@@ -171,7 +156,7 @@ export default {
                 {
                     sortable: false,
                     text: 'Thao tác',
-                    align: 'left',
+                    align: 'center',
                     value: 'action'
                 },
             ],
@@ -232,10 +217,10 @@ export default {
                     lable: 'Địa chỉ hiện tại',
                     value: 'diaChiHienTai'
                 },
-                {
-                    lable: 'Giấy tờ tùy thân',
-                    value: 'action'
-                }
+                // {
+                //     lable: 'Giấy tờ tùy thân',
+                //     value: 'action'
+                // }
             
             ],
             congDanDetail: {

@@ -3,13 +3,13 @@
         <v-row>
             <v-col cols="12" md="8">
                 <div class="d-flex justify-space-between mb-4">
-                    <h3 style="color: #863E3B">THÔNG TIN CÔNG DÂN</h3>
+                    <h3 style="color: #863E3B;font-size: 16px;font-weight: bold;">CẬP NHẬT THÔNG TIN CÔNG DÂN</h3>
                 </div>
             </v-col>
         </v-row>
         <v-form lazy-validation>
             <v-row>
-                <v-col cols="12" md="6" class="py-0">
+                <v-col cols="12" md="6" class="py-0 mb-2">
                     <label>Họ tên</label>
                     <v-text-field
                         class="input-form"
@@ -18,6 +18,7 @@
                         dense
                         clearable
                         max
+                        hide-details="auto"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6" class="py-0">
@@ -29,9 +30,10 @@
                         dense
                         clearable
                         max
+                        hide-details="auto"
                     ></v-text-field>
                 </v-col>
-                <v-col cols="12" md="3" class="py-0">
+                <v-col cols="12" md="3" class="py-0 mb-2">
                     <label>Ngày sinh</label>
                     <v-text-field
                         class="input-form"
@@ -40,6 +42,7 @@
                         dense
                         clearable
                         max
+                        hide-details="auto"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="3" class="py-0">
@@ -51,6 +54,7 @@
                         dense
                         clearable
                         max
+                        hide-details="auto"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="3" class="py-0">
@@ -62,6 +66,7 @@
                         dense
                         clearable
                         max
+                        hide-details="auto"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="3" class="py-0">
@@ -73,9 +78,10 @@
                         dense
                         clearable
                         max
+                        hide-details="auto"
                     ></v-text-field>
                 </v-col>
-                <v-col cols="12" md="6" class="py-0">
+                <v-col cols="12" md="6" class="py-0 mb-2">
                     <label>Email</label>
                     <v-text-field
                         class="input-form"
@@ -84,6 +90,7 @@
                         dense
                         clearable
                         max
+                        hide-details="auto"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="3" class="py-0">
@@ -95,6 +102,7 @@
                         dense
                         clearable
                         max
+                        hide-details="auto"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="3" class="py-0">
@@ -106,9 +114,10 @@
                         dense
                         clearable
                         max
+                        hide-details="auto"
                     ></v-text-field>
                 </v-col>
-                <v-col cols="12" class="py-0">
+                <v-col cols="12" class="py-0 mb-2">
                     <label>Địa chỉ thường trú</label>
                     <v-text-field
                         class="input-form"
@@ -117,9 +126,10 @@
                         dense
                         clearable
                         max
+                        hide-details="auto"
                     ></v-text-field>
                 </v-col>
-                <v-col cols="12" md="4" class="py-0">
+                <v-col cols="12" md="4" class="py-0 mb-2">
                     <label>CMND/CCCD</label>
                     <v-text-field
                         class="input-form"
@@ -128,6 +138,7 @@
                         dense
                         clearable
                         max
+                        hide-details="auto"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="4" class="py-0">
@@ -139,6 +150,7 @@
                         dense
                         clearable
                         max
+                        hide-details="auto"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="4" class="py-0">
@@ -150,9 +162,10 @@
                         dense
                         clearable
                         max
+                        hide-details="auto"
                     ></v-text-field>
                 </v-col>
-                <v-col cols="12" class="py-0">
+                <v-col cols="12" class="py-0 mb-2">
                     <label>Địa chỉ hiện tại</label>
                     <v-text-field
                         class="input-form"
@@ -161,6 +174,7 @@
                         dense
                         clearable
                         max
+                        hide-details="auto"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="4" class="py-0">
@@ -172,6 +186,7 @@
                         dense
                         clearable
                         max
+                        hide-details="auto"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="4" class="py-0">
@@ -194,26 +209,29 @@
                         dense
                         clearable
                         max
+                        hide-details="auto"
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" class="text-center">
-                    <v-btn color="primary" outlined class="mt-3 mx-2  text-white">
+                    <v-btn color="primary"  outlined class="mt-3 mx-2  text-white">
                         <v-icon
                             left
                             dark
+                            size="20"
                         >
-                            mdi-content-save
+                            mdi-reply
                         </v-icon>
-                        Lưu
+                        Quay lại
                     </v-btn>
                     <v-btn color="primary" class="mt-3 mx-2  text-white">
                         <v-icon
                             left
                             dark
+                            size="20"
                         >
-                            mdi-arrow-left-top-bold
+                            mdi-content-save
                         </v-icon>
-                        Quay lại
+                        Lưu
                     </v-btn>
                 </v-col>
             </v-row>

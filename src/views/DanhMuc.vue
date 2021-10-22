@@ -1,7 +1,7 @@
 <template>
   <v-container
     id="danhmuc-page"
-    class="px-0 pt-0"
+    class="px-0 pt-0 mt-2"
     fluid
     tag="section"
   >
