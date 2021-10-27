@@ -5,7 +5,7 @@
     <v-container class="pt-1">
       <v-layout wrap style="padding-top: 7px;">
         <v-flex xs12 md8>
-          <v-layout wrap>
+          <v-layout wrap v-if="appName === 'haugiang'">
             <v-flex class="text-1">
               <span>Cơ quan chủ quản: UBND tỉnh Hậu Giang</span>
             </v-flex>
@@ -31,6 +31,7 @@
     name: 'Footer',
 
     data: () => ({
+      appName: process.env.NODE_ENV,
     }),
     created () {
       let vm = this
@@ -40,11 +41,12 @@
   }
 </script>
 
-<style lang="css">
+<style lang="scss">
   #footer {
     height: 45px;
     width: 100%;
-    background: url(/images/bg-footer.png) no-repeat;
+    /* background: url(/images/bg-footer.png) no-repeat; */
+    background-color: $base-color;
     background-size: cover;
     padding: 0;
   }

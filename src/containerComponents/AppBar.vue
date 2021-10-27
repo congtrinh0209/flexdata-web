@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div id="header-app">
+    <div id="header-app" >
       <header id="banner">
         <div class="container layout wrap" style=""> 
           <a href="" class="py-0 px-0"> 
             <img class="logo-banner" src="/images/logo-banner.png">
-            <span class="title-banner">HỆ THỐNG XÁC THỰC TÀI KHOẢN CÔNG DÂN DOANH NGHIỆP TỈNH HẬU GIANG</span>
+            <span class="title-banner">{{title}}</span>
           </a>
         </div>
       </header>
@@ -34,6 +34,8 @@
     },
 
     data: () => ({
+      appName: process.env.NODE_ENV,
+      title: process.env.VUE_APP_BASE_TITLE,
       items: [
         {
           icon: '',
@@ -60,7 +62,6 @@
     }),
     created () {
       let vm = this
-      
     },
     mounted () {
       let vm = this
@@ -80,11 +81,15 @@
     },
   }
 </script>
-<style lang="css">
+<style lang="scss">
+  $image-banner: '/images/bg-banner-default.png';
+  @if $app-name == 'haugiang' {
+    $image-banner: '/images/bg-banner.png'
+  }
   #header-app {
     height: 54px;
     width: 100%;
-    background: url(/images/bg-banner.png) no-repeat;
+    background: url($image-banner) no-repeat;
     background-size: cover;
     padding: 0;
   }
@@ -111,6 +116,7 @@
     font-size: 18px;
     line-height: 28px;
     color: #FFFFFF;
+    text-transform: uppercase;
   }
   #header-nav #navigation {
     height: 41px;
@@ -135,11 +141,8 @@
       margin: auto;
       padding: 0;
   }
-  #header-nav #navigation li.selected a {
-      /* font-weight: bold; */
-  }
   #header-nav #navigation li:hover a, #header-nav #navigation li.selected a {
-      color: #863E3B;
+      color: $base-color;
       font-weight: 700;
   }
   #header-nav #navigation li a {
@@ -148,7 +151,7 @@
       position: relative;
       text-transform: uppercase;
       text-decoration: none;
-      color: #863E3B;
+      color: $base-color;
       font-size: 16px;
       
   }
@@ -159,7 +162,7 @@
       left: 0;
       width: 100%;
       height: 4px;
-      background-color: #863E3B;
+      background-color: $base-color;
   }
   #header-nav #banner .btns {
     position: absolute;
