@@ -19,7 +19,7 @@
                 @click="selectMenu(item, i)"
               >
                 <v-list-item-icon class="mr-2">
-                  <v-icon size="20" color="primary" v-if="selectedItem == i">mdi-play</v-icon>
+                  <v-icon size="20" color="#863E3B" v-if="selectedItem == i">mdi-play</v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title v-text="item.text"></v-list-item-title>
@@ -353,7 +353,6 @@
     }),
     created () {
       let vm = this
-      console.log('BASE_COLOR_APP', process.env)
       vm.$store.commit('SET_INDEXTAB', 0)
       vm.selectedItem = 0
       vm.itemSelect = vm.items[0]
@@ -381,7 +380,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="css">
   #danhmuc-page .v-list {
     background: transparent !important;
   }
@@ -396,9 +395,6 @@
     max-width: 235px;
     padding-right: 15px;
     /* border-bottom: 1px solid #DDDDDD; */
-  }
-  .danh-muc-1 .v-list {
-    padding-top: 0px;
   }
   .danh-muc-2 {
     width: calc(100% - 235px);
@@ -424,10 +420,10 @@
       min-width: 135px;
   }
   body .background-triangle-big, body .background-triangle-small {
-      background-color: $base-color !important;
+      background-color: #863E3B !important;
   }
   .background-triangle-big, .background-triangle-small {
-      background-color: $base-color;
+      background-color: #863E3B;
       display: inline-block;
       text-align: left;
       color: #fff;
@@ -439,7 +435,7 @@
       cursor: pointer;
   }
   body .background-triangle-big:before, body .background-triangle-small:before {
-      border-top-color: $base-color !important;
+      border-top-color: #863E3B !important;
   }
 
   .background-triangle-big:before {
@@ -449,7 +445,7 @@
   45deg);
       right: -4px;
       top: 4px;
-      border-top: 26px solid $base-color;
+      border-top: 26px solid #863E3B;
       border-left: 26px solid transparent;
       border-bottom: 25px solid transparent;
   }
@@ -460,7 +456,7 @@
   45deg);
       right: -4px;
       top: 4px;
-      border-top: 26px solid $base-color;
+      border-top: 26px solid #863E3B;
       border-left: 26px solid transparent;
       border-bottom: 25px solid transparent;
   }

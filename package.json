@@ -4,9 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "serve:haugiang": "vue-cli-service serve --mode haugiang",
     "build": "vue-cli-service build",
-    "build:haugiang": "vue-cli-service build --mode haugiang",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

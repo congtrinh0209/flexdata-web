@@ -10,7 +10,7 @@
         <div class="wrap-title">
           <div class="text-1">HỆ THỐNG XÁC THỰC TÀI KHOẢN</div>
           <div class="text-1">CÔNG DÂN DOANH NGHIỆP</div>
-          <div class="text-1 text-1-1">{{titleLogin}}</div>
+          <div class="text-1 text-1-1">TỈNH HẬU GIANG</div>
         </div>
 
         <div class="wrap-form">
@@ -80,7 +80,6 @@
     name: 'Login',
 
     data: () => ({
-      titleLogin: process.env.VUE_APP_TITLE_LOGIN,
       loading: false,
       valid: true,
       userName: '',
@@ -103,7 +102,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="css">
   #app {
     background: transparent !important
   }
@@ -148,7 +147,6 @@
     font-size: 42px;
     line-height: 55px;
     color: #E9372B;
-    text-transform: uppercase;
   }
   .wrap-form {
     width: 420px;

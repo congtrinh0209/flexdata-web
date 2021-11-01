@@ -2,8 +2,8 @@
     <div>
         <v-row align-content="center">
             <v-col cols="12" class="mt-0 pb-2">
-                <div class="title-page" v-if="type === 'cong-dan'">TÌM KIẾM THÔNG TIN CÔNG DÂN</div>
-                <div class="title-page" v-else>TÌM KIẾM THÔNG TIN TỔ CHỨC, DOANH NGHIỆP</div>  
+                <div style="color: #863E3B;font-size: 16px;font-weight: bold;" v-if="type === 'cong-dan'">TÌM KIẾM THÔNG TIN CÔNG DÂN</div>
+                <div style="color: #863E3B;font-size: 16px;font-weight: bold;" v-else>TÌM KIẾM THÔNG TIN TỔ CHỨC, DOANH NGHIỆP</div>  
             </v-col>
             <v-col cols="12" md="3" class="my-0 py-0">
                 <label>CMND/CCCD</label>
@@ -73,7 +73,7 @@
                 </div>
             </v-col>
             <v-col cols="12" md="6" class="d-flex align-center justify-end">
-                <v-btn color="primary" class="mt-3 mx-0 text-white">
+                <v-btn color="primary" flat class="mt-3 mx-0 text-white">
                     Tìm kiếm
                 </v-btn>
             </v-col>
@@ -87,6 +87,7 @@
                 >
                     <strong>Số lượng: {{ total }}</strong>
                     <v-data-table
+                        flat
                         :headers="headers"
                         :items="items"
                         :items-per-page="itemsPerPage"
@@ -123,7 +124,7 @@
 </template>
 
 <script>
-import Pagination from './Pagination.vue'
+import Pagination from '../Pagination.vue'
 export default {
     components: {
         Pagination
