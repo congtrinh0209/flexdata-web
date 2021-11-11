@@ -3,7 +3,7 @@
         <v-row>
             <v-col cols="12" md="8">
                 <div class="d-flex justify-space-between mb-4">
-                    <div style="color: #863E3B;font-size: 16px;font-weight: bold;">THÔNG TIN CÔNG DÂN</div>
+                    <div class="title-page">THÔNG TIN CÔNG DÂN</div>
                     <div>
                         <v-btn
                             class="mx-0"
@@ -46,7 +46,7 @@
                         </template>
                     </v-simple-table>
                 </div>
-                <div style="color: #863E3B;font-size: 16px;font-weight: bold;" class="mt-3">GIẤY TỜ, TÀI LIỆU</div>
+                <div class="title-page mt-3">GIẤY TỜ, TÀI LIỆU</div>
                 <div class="px-0 mt-4">
                     <v-data-table
                         flat
@@ -68,7 +68,7 @@
                                     class="mx-2"
                                     small
                                     text
-                                    color="#863e3b"
+                                    color="primary"
                                 >
                                     <v-icon>mdi-pencil-outline</v-icon>
                                 </v-btn>
@@ -82,7 +82,7 @@
                 <v-card class="pt-4">
                     <div class="d-flex align-center flex-column">
                         <img class="mb-4" style="width: 226px; height: 226px;" src="/images/avt.png" alt="">
-                        <h4 style="color: #863E3B">THÔNG TIN TÀI KHOẢN</h4>
+                        <h4 class="title-page">THÔNG TIN TÀI KHOẢN</h4>
                         <v-layout class="mt-4" wrap style="width: 350px;">
                             <v-flex xs5>Tên đăng nhập:</v-flex>
                             <v-flex xs7 class="mb-2">
@@ -112,7 +112,7 @@
 </template>
 
 <script>
-import Pagination from '../Pagination.vue'
+import Pagination from './Pagination.vue'
 export default {
     components: {
         Pagination
@@ -254,7 +254,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .cong-dan-info td{
     border-bottom: 0px!important;
 }
