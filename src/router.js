@@ -20,19 +20,19 @@ export default new Router({
         {
           path: '/tai-khoan/:type',
           name: 'TaiKhoan',
-          component: () => import('@/views/cong-dan/DanhSachCongDan'),
+          component: () => import('@/views/DanhSachCongDan'),
           props: true
         },
         {
           path: '/thong-tin-tai-khoan/:id',
           name: 'ChiTietCongDan',
-          component: () => import('@/views/cong-dan/ChiTietCongDan'),
+          component: () => import('@/views/ChiTietCongDan'),
           props: true
         },
         {
           path: '/cap-nhat-tai-khoan/:id',
           name: 'ChinhSuaCongDan',
-          component: () => import('@/views/cong-dan/EditCongDan'),
+          component: () => import('@/views/EditCongDan'),
           props: true
         },
       ],

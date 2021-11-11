@@ -10,7 +10,7 @@
         <div class="wrap-title">
           <div class="text-1">HỆ THỐNG XÁC THỰC TÀI KHOẢN</div>
           <div class="text-1">CÔNG DÂN DOANH NGHIỆP</div>
-          <div class="text-1 text-1-1">TỈNH HẬU GIANG</div>
+          <div class="text-1 text-1-1">{{titleLogin}}</div>
         </div>
 
         <div class="wrap-form">
@@ -70,7 +70,7 @@
       </div> 
       
     </v-container>
-    <img class="img-login-logo" src="/images/image-login.png">
+    <img class="img-login-logo" :src="`${publicPath}/images/image-login.png`">
   </div>
   
 </template>
@@ -80,6 +80,8 @@
     name: 'Login',
 
     data: () => ({
+      titleLogin: process.env.VUE_APP_TITLE_LOGIN,
+      publicPath: process.env.VUE_APP_PULIC_PATH,
       loading: false,
       valid: true,
       userName: '',
@@ -102,12 +104,13 @@
   }
 </script>
 
-<style lang="css">
+<style lang="scss">
+  $image-login: $public-path + '/images/bg-login.png';
   #app {
     background: transparent !important
   }
   .wrap-login {
-    background: url(/images/bg-login.png) no-repeat;
+    background: url($image-login) no-repeat;
     background-size: cover;
     height: 100vh;
     width: 100%;
@@ -147,6 +150,7 @@
     font-size: 42px;
     line-height: 55px;
     color: #E9372B;
+    text-transform: uppercase;
   }
   .wrap-form {
     width: 420px;

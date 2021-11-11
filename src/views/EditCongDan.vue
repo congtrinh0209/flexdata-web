@@ -3,7 +3,7 @@
         <v-row>
             <v-col cols="12" md="8">
                 <div class="d-flex justify-space-between mb-4">
-                    <h3 style="color: #863E3B;font-size: 16px;font-weight: bold;">CẬP NHẬT THÔNG TIN CÔNG DÂN</h3>
+                    <h3 class="title-page">CẬP NHẬT THÔNG TIN CÔNG DÂN</h3>
                 </div>
             </v-col>
         </v-row>

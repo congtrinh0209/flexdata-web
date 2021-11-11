@@ -5,7 +5,7 @@
     <v-container class="pt-1">
       <v-layout wrap style="padding-top: 7px;">
         <v-flex xs12 md8>
-          <v-layout wrap>
+          <v-layout wrap v-if="appName === 'haugiang'">
             <v-flex class="text-1">
               <span>Cơ quan chủ quản: UBND tỉnh Hậu Giang</span>
             </v-flex>
@@ -18,8 +18,8 @@
           </v-layout>
         </v-flex>
         <v-flex xs12 md4 class="image-footer">
-            <img class="img-1" src="/images/logo-fds.png">
-            <img class="img-2" src="/images/logo-flex.png">
+            <img class="img-1" :src="`${publicPath}/images/logo-fds.png`">
+            <img class="img-2" :src="`${publicPath}/images/logo-flex.png`">
         </v-flex>
       </v-layout>
     </v-container>
@@ -31,6 +31,8 @@
     name: 'Footer',
 
     data: () => ({
+      appName: process.env.NODE_ENV,
+      publicPath: process.env.VUE_APP_PULIC_PATH,
     }),
     created () {
       let vm = this
@@ -40,11 +42,12 @@
   }
 </script>
 
-<style lang="css">
+<style lang="scss">
   #footer {
     height: 45px;
     width: 100%;
-    background: url(/images/bg-footer.png) no-repeat;
+    /* background: url(/images/bg-footer.png) no-repeat; */
+    background-color: $base-color;
     background-size: cover;
     padding: 0;
   }
