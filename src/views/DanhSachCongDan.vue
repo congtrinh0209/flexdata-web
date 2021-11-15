@@ -73,7 +73,7 @@
                 </div>
             </v-col>
             <v-col cols="12" md="6" class="d-flex align-center justify-end">
-                <v-btn color="primary" class="mt-3 mx-0 text-white">
+                <v-btn color="primary" small class="mt-3 mx-0 text-white">
                     Tìm kiếm
                 </v-btn>
             </v-col>

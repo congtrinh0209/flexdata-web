@@ -5,27 +5,24 @@
     fluid
     tag="section"
   >
+    <vue-confirm-dialog></vue-confirm-dialog>
     <v-layout wrap>
       <v-flex class="danh-muc-1">
         <div class="nav-content">
           <v-list dense>
-            <v-list-item-group
-              v-model="selectedItem"
-              color="primary"
+            <v-list-item
+              v-for="(item, i) in items"
+              :key="item.value"
+              @click="selectMenu(item, i)"
+              :style="selectedItem == item.value ? 'background: #dedede;' : ''"
             >
-              <v-list-item
-                v-for="(item, i) in items"
-                :key="i"
-                @click="selectMenu(item, i)"
-              >
-                <v-list-item-icon class="mr-2">
-                  <v-icon size="20" color="primary" v-if="selectedItem == i">mdi-play</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title v-text="item.text"></v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list-item-group>
+              <v-list-item-icon class="mr-2">
+                <v-icon size="20" color="primary" v-if="selectedItem == item.value">mdi-play</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title v-text="item.text"></v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
           </v-list>
         </div>
       </v-flex>
@@ -50,7 +47,7 @@
           </div>
         </div>
         <v-layout wrap class="wrap-content-2 pb-0">
-          <v-flex xs12 md4>
+          <!-- <v-flex xs12 md4>
             <v-text-field
               class="pr-2 input-form"
               dense
@@ -61,15 +58,15 @@
               hide-details="auto"
               height="32px"
             ></v-text-field>
-          </v-flex>
-          <v-flex xs12 md4 class="pr-2">
+          </v-flex> -->
+          <v-flex xs12 md8 class="pr-2">
             <v-text-field
               class="input-form"
               dense
               solo
-              placeholder="Nhập tên mục"
+              placeholder="Nhập mã danh mục hoặc tên danh mục"
               v-model="dictName"
-              @keyup.enter=""
+              @keyup.enter="getDanhMuc"
               hide-details="auto"
               height="32px"
             ></v-text-field>
@@ -82,15 +79,25 @@
               placeholder="Trạng thái"
               v-model="statusFilter"
               :items="itemsStatus"
-              item-text="text"
+              item-text="name"
               item-value="value"
               @keyup.enter=""
               hide-details="auto"
               height="32px"
+              clearable
             ></v-autocomplete>
           </v-flex>
-          <v-flex xs12 class="mt-3 text-right">
-            <v-btn color="primary" small class="mx-0 text-white">
+          <v-flex xs12 class="mt-3">
+            <v-btn
+              class="mx-0 left"
+              small
+              color="primary"
+              @click="showForm()"
+            >
+              <v-icon size="18">mdi-plus</v-icon>&nbsp;
+              Thêm mới
+            </v-btn>
+            <v-btn @click="getDanhMuc('reset')" color="primary" small class="mx-0 text-white" style="float: right;">
               Tìm kiếm
             </v-btn>
           </v-flex>
@@ -104,6 +111,7 @@
               :headers="headers"
               :items="itemsDanhMuc"
               :items-per-page="itemsPerPage"
+              item-key="maMuc"
               hide-default-footer
               class="elevation-1"
               no-data-text="Không có"
@@ -114,24 +122,40 @@
                 <template v-slot:item.index="{ item, index }">
                     <div>{{ (page+1) * itemsPerPage - itemsPerPage + index + 1 }}</div>
                 </template>
-                <template v-slot:item.status="{ item }">
-                    <div>
-                        {{ getStatus(item.status) }}
+                <template v-slot:item.tinhTrang="{ item }">
+                    <div :style="item.tinhTrang == '1' ? 'color: green' : 'color: red'">
+                        {{ getStatus(item.tinhTrang) }}
                     </div>
                 </template>
                 <template v-slot:item.action="{ item }">
-                    <div @click="dialogAddDanhMuc = true">
-                      <a>Sửa</a>
-                    </div>
+                  <div>
+                    <v-tooltip top>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn @click="showForm(item)" color="blue" text icon class=" mr-3" v-bind="attrs" v-on="on">
+                          <v-icon size="22">mdi-pencil</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>Sửa</span>
+                    </v-tooltip>
+                    <v-tooltip top>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn @click="deleteDanhMuc(item)" color="red" text icon class="" v-bind="attrs" v-on="on">
+                          <v-icon size="22">mdi-delete</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>Xóa</span>
+                    </v-tooltip>
+                  </div>
                 </template>
             </v-data-table>
-            <pagination v-if="pageCount" :pageInput="page" :pageCount="pageCount"></pagination>
+            <pagination v-if="pageCount" :pageInput="page" :pageCount="pageCount" @tiny:change-page="changePage"></pagination>
         </v-card>
       </v-flex>
     </v-layout>
     <v-dialog
       max-width="900"
       v-model="dialogAddDanhMuc"
+      persistent
     >
       <v-card>
         <v-toolbar
@@ -153,7 +177,7 @@
         </v-toolbar>
         <v-card-text class="mt-5">
           <v-form
-            ref="formAddMember"
+            ref="formAddDanhMuc"
             v-model="validFormAdd"
             lazy-validation
           >
@@ -169,7 +193,7 @@
                       v-model="maMuc"
                       solo
                       dense
-                      clearable
+                      :readonly="typeAction === 'update'"
                       :rules="required"
                       required
                       hide-details="auto"
@@ -187,10 +211,10 @@
                       v-model="tenMuc"
                       solo
                       dense
-                      clearable
                       :rules="required"
                       required
                       hide-details="auto"
+                      clearable
                     ></v-text-field>
                   </v-layout>
                 </v-flex>
@@ -205,9 +229,8 @@
                       hide-no-data
                       :items="itemsStatus"
                       v-model="statusCreate"
-                      item-text="text"
+                      item-text="name"
                       item-value="value"
-                      clearable
                       :rules="required"
                       required
                       dense
@@ -216,23 +239,74 @@
                     ></v-autocomplete>
                   </v-layout>
                 </v-flex>
-                <v-flex xs12>
+                <v-flex class="mb-2" xs12 v-if="itemSelect['collectionName'] === 'quanhuyen' || itemSelect['collectionName'] === 'phuongxa'">
                   <v-layout wrap>
                     <div class="flex text-label">
                       <span>Danh mục cha</span>
+                      <span class="red--text"> (*)</span>
                     </div>
                     <v-autocomplete
                       class="flex input-form"
                       hide-no-data
-                      :items="itemsDanhMucCha"
+                      :items="itemsTinhThanh"
                       v-model="danhMucCha"
-                      item-text="text"
-                      item-value="value"
-                      clearable
+                      item-text="tenMuc"
+                      item-value="maMuc"
                       dense
                       solo
                       hide-details="auto"
-                    ></v-autocomplete>
+                      :rules="required"
+                      required
+                      return-object
+                      @change="changeTinhThanh"
+                      :label="itemSelect['collectionName'] === 'phuongxa' ? 'Tỉnh/ thành' : ''"
+                    >
+                      <template v-slot:selection="data">
+                        <span>{{ data.item.tenMuc }} - {{ data.item.maMuc }}</span>
+                      </template>
+                      <template v-slot:item="data">
+                        <span>{{ data.item.tenMuc }} - {{ data.item.maMuc }}</span>
+                      </template>
+                    </v-autocomplete>
+                    <v-autocomplete
+                      v-if="itemSelect['collectionName'] === 'phuongxa'"
+                      class="flex input-form pl-2"
+                      hide-no-data
+                      :items="itemsQuanHuyen"
+                      v-model="danhMucChaPhuongXa"
+                      item-text="tenMuc"
+                      item-value="maMuc"
+                      dense
+                      solo
+                      hide-details="auto"
+                      :rules="required"
+                      required
+                      return-object
+                      label="Quận/ huyện"
+                    >
+                      <template v-slot:selection="data">
+                        <span>{{ data.item.tenMuc }} - {{ data.item.maMuc }}</span>
+                      </template>
+                      <template v-slot:item="data">
+                        <span>{{ data.item.tenMuc }} - {{ data.item.maMuc }}</span>
+                      </template>
+                    </v-autocomplete>
+                  </v-layout>
+                </v-flex>
+                <v-flex xs12 class="mb-2">
+                  <v-layout wrap>
+                    <div class="flex text-label">
+                      <span>Ghi chú</span>
+                    </div>
+                    <v-textarea
+                      class="flex input-form"
+                      v-model="ghiChu"
+                      solo
+                      dense
+                      hide-details="auto"
+                      rows="3"
+                      clearable
+                    ></v-textarea>
                   </v-layout>
                 </v-flex>
               </v-layout>
@@ -245,12 +319,17 @@
             </v-icon>
             Thoát
           </v-btn>
-          <v-btn class="mr-2" color="primary" :loading="loading" :disabled="loading" @click="submitAddDanhMuc">
+          <v-btn v-if="typeAction === 'add'" class="mr-2" color="primary" :loading="loading" :disabled="loading" @click="submitAddDanhMuc">
             <v-icon left>
               mdi-content-save
             </v-icon>
-            <span v-if="typeAction === 'add'">Thêm mới</span>
-            <span v-else>Cập nhật</span>
+            <span>Thêm mới</span>
+          </v-btn>
+          <v-btn v-else class="mr-2" color="primary" :loading="loading" :disabled="loading" @click="submitUpdateDanhMuc">
+            <v-icon left>
+              mdi-content-save
+            </v-icon>
+            <span>Cập nhật</span>
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -259,7 +338,18 @@
 </template>
 
 <script>
+  import Vue from 'vue'
   import Pagination from './Pagination.vue'
+  import toastr from 'toastr'
+  import VueConfirmDialog from 'vue-confirm-dialog'
+  Vue.use(VueConfirmDialog)
+  Vue.component('vue-confirm-dialog', VueConfirmDialog.default)
+  toastr.options = {
+    'closeButton': true,
+    'timeOut': '5000',
+    "positionClass": "toast-top-center"
+  }
+
   export default {
     name: 'DanhMuc',
     components: {
@@ -269,24 +359,36 @@
       loading: false,
       dialogAddDanhMuc: false,
       typeAction: 'add',
+      dataAction: '',
       validFormAdd: false,
-      itemsStatus: [],
+      itemsStatus: [
+        {name: 'Sử dụng', value: '1'},
+        {name: 'Không sử dụng', value: '0'}
+      ],
       statusFilter: '',
       statusCreate: '',
       itemsDanhMucCha: [],
       danhMucCha: '',
+      danhMucChaPhuongXa: '',
       dictName: '',
       dictCode: '',
-      selectedItem: 0,
+      selectedItem: '1',
       itemSelect: '',
       items: [
-        { text: 'Giới tính', value: '1' },
-        { text: 'Dân tộc', value: '2' },
-        { text: 'Tôn giáo', value: '3' },
-        { text: 'Quốc gia', value: '4' },
-        { text: 'Tỉnh/ thành', value: '5' },
-        { text: 'Quận/ huyện', value: '6' },
-        { text: 'Xã/ phường', value: '7' },
+        { text: 'Giới tính', value: '1', collectionName: 'gioitinh' },
+        { text: 'Dân tộc', value: '2', collectionName: 'dantoc' },
+        { text: 'Tôn giáo', value: '3', collectionName: 'tongiao' },
+        { text: 'Quốc gia', value: '4', collectionName: 'quocgia' },
+        { text: 'Tỉnh/ thành', value: '5', collectionName: 'tinhthanh' },
+        { text: 'Quận/ huyện', value: '6', collectionName: 'quanhuyen' },
+        { text: 'Xã/ phường', value: '7', collectionName: 'phuongxa' },
+        { text: 'Vai trò sử dụng', value: '8', collectionName: 'vaitrosudung' },
+        { text: 'Loại giấy tờ tùy thân', value: '9', collectionName: 'loaigiaytotuythan' },
+        { text: 'Trạng thái dữ liệu', value: '10', collectionName: 'trangthaidulieu' },
+        { text: 'Tình trạng tổ chức', value: '11', collectionName: 'tinhtrangtochuc' },
+        { text: 'Tình trạng sử dụng tài khoản', value: '12', collectionName: 'tinhtrangsudungtaikhoan' },
+        { text: 'Tình trạng hôn nhân', value: '13', collectionName: 'tinhtranghonnhan' },
+        { text: 'Tình trạng sinh sống', value: '14', collectionName: 'tinhtrangsinhsong' }
       ],
       headers: [
         {
@@ -299,79 +401,308 @@
             sortable: false,
             text: 'Mã mục',
             align: 'left',
-            value: 'itemCode'
+            value: 'maMuc'
         },
         {
             sortable: false,
             text: 'Tên mục',
             align: 'left',
-            value: 'itemName'
+            value: 'tenMuc'
         },
         {
             sortable: false,
-            text: 'Tham chiếu',
+            text: 'Trạng thái',
             align: 'left',
-            value: 'ref'
-        },
-        {
-            sortable: false,
-            text: 'Tình trạng',
-            align: 'left',
-            value: 'status'
+            value: 'tinhTrang'
         },
         {
             sortable: false,
             text: 'Thao tác',
             align: 'center',
-            value: 'action'
+            value: 'action',
+            width: 120
         },
       ],
-      itemsDanhMuc: [
-          {
-              itemCode: 'A-3123123123',
-              itemName: 'Tên danh mục',
-              ref: 'A0123123123',
-              status: 1,
-          },
-          {
-              itemCode: 'A-3123123123',
-              itemName: 'Tên danh mục',
-              ref: 'A0123123123',
-              status: 0,
-          }
-      ],
+      itemsDanhMuc: '',
       page: 0,
-      itemsPerPage: 10,
-      total: 2,
-      pageCount: 10,
+      itemsPerPage: 1,
+      total: 0,
+      pageCount: 0,
       loadingData: false,
       required: [
-        v => !!v || 'Thông tin bắt buộc'
+        v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc'
       ],
       tenMuc: '',
-      maMuc: ''
+      maMuc: '',
+      ghiChu: '',
+      itemUpdate: '',
+      itemsTinhThanh: [],
+      itemsQuanHuyen: []
     }),
     created () {
       let vm = this
       console.log('BASE_COLOR_APP', process.env)
       vm.$store.commit('SET_INDEXTAB', 0)
-      vm.selectedItem = 0
+      vm.selectedItem = '1'
       vm.itemSelect = vm.items[0]
+      vm.getDanhMuc('reset')
     },
     computed: {
     },
+    watch: {
+    },
     methods: {
-      submitAddDanhMuc () {},
+      showForm (item) {
+        let vm = this
+        if (item) {
+          vm.typeAction = 'update'
+          vm.itemUpdate = item
+          vm.danhMucCha = ''
+          vm.danhMucChaPhuongXa = ''
+        } else {
+          vm.typeAction = 'add'
+        }
+        vm.dialogAddDanhMuc = true
+        setTimeout(function () {
+          if (item) {
+            vm.maMuc = item.maMuc
+            vm.tenMuc = item.tenMuc
+            vm.ghiChu = item.ghiChu
+            if (vm.selectMenu.collectionName === 'quanhuyen') {
+              vm.danhMucCha = item.thamChieu
+            }
+            if (vm.selectMenu.collectionName === 'phuongxa') {
+              vm.danhMucChaPhuongXa = item.thamChieu
+            }
+            vm.danhMucCha = ''
+            try {
+              vm.statusCreate = vm.itemsStatus.find(function (itemFilter) {
+                return item.tinhTrang == itemFilter.value
+              })['value']
+            } catch (error) {
+            }
+          } else {
+            vm.maMuc = ''
+            vm.tenMuc = ''
+            vm.ghiChu = ''
+            vm.danhMucCha = ''
+            vm.danhMucChaPhuongXa = ''
+            vm.statusCreate = '1'
+          }
+          vm.$refs.formAddDanhMuc.resetValidation()
+        }, 200)
+        if ((vm.itemSelect.collectionName === 'quanhuyen' || vm.itemSelect.collectionName === 'phuongxa') && vm.itemsTinhThanh.length == 0) {
+          vm.getDanhMucCha('tinhthanh')
+        }
+        if (vm.itemSelect.collectionName === 'phuongxa') {
+          vm.getDanhMucCha('quanhuyen')
+        }
+      },
+      submitAddDanhMuc () {
+        let vm = this
+        vm.dataAction = {
+          maMuc: vm.maMuc,
+          tenMuc: vm.tenMuc,
+          tinhTrang: vm.statusCreate,
+          ghiChu: vm.ghiChu,
+          nguoiTaoLap: {
+            maSoID: '',
+            tenDinhDanh: '',
+            type: ''
+          },
+          thamChieu: {
+            maMuc: '',
+            tenMuc: '',
+            type: ''
+          }
+        }
+        if (vm.itemSelect.collectionName === 'quanhuyen') {
+          vm.dataAction.thamChieu = {
+            maMuc: vm.danhMucCha.maMuc,
+            tenMuc: vm.danhMucCha.tenMuc,
+            type: vm.danhMucCha.type
+          }
+        }
+        if (vm.loading) {
+          return
+        }
+        vm.loading = true
+        if (vm.$refs.formAddDanhMuc.validate()) {
+          let filter = {
+            collectionName: vm.itemSelect.collectionName,
+            data: vm.dataAction
+          }
+          vm.$store.dispatch('collectionCreate', filter).then(function (result) {
+            vm.loading = false
+            toastr.remove()
+            toastr.success('Thêm danh mục thành công')
+            vm.getDanhMuc()
+            vm.dialogAddDanhMuc = false
+          }).catch(function (response) {
+            vm.loading = false
+            toastr.remove()
+            if (response && response.status == 409) {
+              toastr.error('Mã danh mục đã tồn tại')
+              return
+            }
+            toastr.error('Thêm danh mục thất bại')
+          })
+        }
+      },
+      submitUpdateDanhMuc () {
+        let vm = this
+        vm.dataAction = {
+          maMuc: vm.itemUpdate.maMuc,
+          tenMuc: vm.tenMuc,
+          tinhTrang: vm.statusCreate,
+          type: vm.itemUpdate.type,
+          nguoiTaoLap: {
+            maSoID: '',
+            tenDinhDanh: '',
+            type: ''
+          },
+          thamChieu: {
+            maMuc: '',
+            tenMuc: '',
+            type: ''
+          },
+          ghiChu: vm.ghiChu
+        }
+        if (vm.loading) {
+          return
+        }
+        vm.loading = true
+        if (vm.$refs.formAddDanhMuc.validate()) {
+          let filter = {
+            collectionName: vm.itemSelect.collectionName,
+            id: vm.itemUpdate.primKey,
+            data: vm.dataAction
+          }
+          vm.$store.dispatch('collectionUpdate', filter).then(function (result) {
+            vm.loading = false
+            toastr.remove()
+            toastr.success('Cập nhật danh mục thành công')
+            vm.getDanhMuc()
+            vm.dialogAddDanhMuc = false
+          }).catch(function (response) {
+            vm.loading = false
+            toastr.remove()
+            toastr.error('Cập nhật danh mục thất bại')
+          })
+        }
+      },
+      deleteDanhMuc (item) {
+        let vm = this
+        vm.$confirm({
+          title: 'Xác nhận xóa dữ liệu',
+          message: 'Bạn có chắc chắn xóa danh mục?',
+          button: {
+            yes: 'Có',
+            no: 'Không'
+          },
+          callback: confirm => {
+            if (confirm == true) {
+              vm.loading = true
+              let filter = {
+                collectionName: vm.itemSelect.collectionName,
+                id: item.primKey
+              }
+              vm.$store.dispatch('collectionDelete', filter).then(function (result) {
+                vm.loading = false
+                toastr.remove()
+                toastr.success('Xóa danh mục thành công')
+                vm.getDanhMuc()
+              }).catch(function (response) {
+                vm.loading = false
+                toastr.remove()
+                toastr.error('Xóa danh mục thất bại')
+              })
+            }
+          }
+        })
+        
+      },
+      getDanhMuc (type) {
+        let vm = this
+        if (type === 'reset') {
+          vm.itemsDanhMuc = []
+          vm.total = 0
+          vm.pageCount = 0
+          vm.page = 0
+        }
+        if (vm.loadingData) {
+          return
+        }
+        vm.loadingData = true
+        let filter = {
+          collectionName: vm.itemSelect.collectionName,
+          data: {
+            keyword: vm.dictName,
+            page: vm.page,
+            size: vm.itemsPerPage,
+            orderFields: 'maMuc',
+            orderTypes: 'asc',
+            tinhTrang: !vm.statusFilter ? '1,0' : vm.statusFilter
+          }
+        }
+        vm.$store.dispatch('collectionFilter', filter).then(function (response) {
+          vm.itemsDanhMuc = response.content
+          vm.total = response.totalElements
+          vm.pageCount = response.totalPages
+          vm.loadingData = false
+        }).catch(function () {
+          vm.loadingData = false
+        })
+      },
+      getDanhMucCha (name) {
+        let vm = this
+        let filter = {
+          collectionName: name,
+          data: {
+            keyword: '',
+            page: 0,
+            size: 100,
+            orderFields: 'maMuc',
+            orderTypes: 'asc',
+            tinhTrang: '1'
+          }
+        }
+        vm.$store.dispatch('collectionFilter', filter).then(function (response) {
+          if (name === 'tinhthanh') {
+            vm.itemsTinhThanh = response.content
+          } else {
+            vm.itemsQuanHuyen = response.content
+          }
+        }).catch(function () {
+        })
+      },
+      changeTinhThanh () {
+        let vm = this
+        if (vm.selectMenu.collectionName === 'phuongxa' && vm.danhMucCha) {
+          setTimeout (function () {
+            vm.getDanhMucCha('quanhuyen')
+          }, 200)
+        }
+        
+      },
       selectMenu(item, index) {
         let vm = this
-        vm.selectedItem = index
+        vm.selectedItem = item.value
         vm.itemSelect = item
+        vm.dictName = ''
+        vm.statusFilter = ''
+        vm.getDanhMuc()
+      },
+      changePage(config) {
+        let vm = this
+        vm.page = config.page
+        vm.getDanhMuc()
       },
       getStatus(status) {
         switch(status) {
-          case 1:
+          case '1':
               return 'Sử dụng'
-          case 0:
+          case '0':
               return 'Không sử dụng'
           default:
               return ''
