@@ -14,10 +14,13 @@ npm run serve
 ```
 npm run build
 ```
-
-### Lints and fixes files
+### Install Gradle
 ```
-npm run lint
+npm i gradle
+```
+### Run build *war for production
+```
+gradle build
 ```
 
 ### Customize configuration

@@ -108,17 +108,17 @@
         let vm = this
         vm.currentPage -= 1
         vm.currentPagePagination = vm.currentPage + 1
-        // vm.$emit('tiny:change-page', {
-        //   page: vm.currentPage
-        // })
+        vm.$emit('tiny:change-page', {
+          page: vm.currentPage
+        })
       },
       nextPage () {
         let vm = this
         vm.currentPage += 1
         vm.currentPagePagination = vm.currentPage + 1
-        // vm.$emit('tiny:change-page', {
-        //   page: vm.currentPage
-        // })
+        vm.$emit('tiny:change-page', {
+          page: vm.currentPage
+        })
       },
     },
   }
