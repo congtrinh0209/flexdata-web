@@ -9,12 +9,19 @@ export default new Vuex.Store({
     indexTab: 0,
   },
   getters: {
-    getIndexTab: (state) => state.indexTab
+    getIndexTab: (state) => state.indexTab,
+    getIsSigned: (state) => {
+      return state.isSigned
+    },
   },
   mutations: {
     SET_INDEXTAB(state, indexTab) {
       state.indexTab = indexTab
-    }
+    },
+    SET_ISSIGNED (state, payload) {
+      state.isSigned = payload
+    },
+
   },
   actions: {
     collectionCreate ({commit, state}, filter) {
