@@ -174,14 +174,14 @@ export default {
             ],
             items: [
                 {
-                    cmnd: '32423942',
-                    fullname: 'Đào Văn Dũng',
+                    cmnd: '089123123',
+                    fullname: 'Công dân 1',
                     contact: 'abc@gmail.com/0233239232',
                     status: 1,
                 },
                 {
-                    cmnd: '32423942',
-                    fullname: 'Đào Văn Dũng',
+                    cmnd: '0898123123',
+                    fullname: 'Công dân 2',
                     contact: 'abc@gmail.com/0233239232',
                     status: 0,
                 }

@@ -81,7 +81,7 @@
             <v-col cols="12" md="4" class="mt-2">
                 <v-card class="pt-4">
                     <div class="d-flex align-center flex-column">
-                        <img class="mb-4" style="width: 226px; height: 226px;" src="/images/avt.png" alt="">
+                        <img class="mb-4" style="width: 226px; height: 226px;" :src="`${publicPath}/images/avt.png`">
                         <h4 class="title-page">THÔNG TIN TÀI KHOẢN</h4>
                         <v-layout class="mt-4" wrap style="width: 350px;">
                             <v-flex xs5>Tên đăng nhập:</v-flex>
@@ -119,6 +119,7 @@ export default {
     },
     data() {
         return {
+            publicPath: process.env.VUE_APP_PULIC_PATH,
             selected: [],
             name: '',
             loadingData: false,
@@ -224,7 +225,7 @@ export default {
             
             ],
             congDanDetail: {
-                hoTen: 'Đào Văn Dũng',
+                hoTen: 'Nguyễn Văn A',
                 ngaySinh: '10/02/1998',
                 gioiTinh: 'Nam',
                 danToc: 'Kinh',
