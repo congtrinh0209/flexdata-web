@@ -7,6 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     indexTab: 0,
+    apiSso: process.env.VUE_APP_PATH_API_SSO
   },
   getters: {
     getIndexTab: (state) => state.indexTab,
@@ -118,6 +119,49 @@ export default new Vuex.Store({
           resolve(serializable)
         }).catch(function (error) {
           reject(error)
+        })
+      })
+    },
+    loginKeyCloak ({commit, state}, filter) {
+      return new Promise((resolve, reject) => {
+        let settings = {
+          "url": state.apiSso + '/flex/oauth2/authorization_endpoint?redirect_uri=' + filter.uri,
+          "method": "GET",
+          "headers": {
+            'Content-Type': 'application/json'
+          },
+        };
+        
+        $.ajax(settings).done(function (response) {
+          resolve(response)
+        }).fail(function (response) {
+          reject(response)
+        })
+      })
+    },
+    getTokenKeyCloak ({commit, state}, filter) {
+      return new Promise((resolve, reject) => {
+        let settings = {
+          "url": state.apiSso + '/auth/realms/flex-data-hg-qa/protocol/openid-connect/token',
+          "method": "POST",
+          "headers": {
+            'Authorization': 'Basic ZmxleDpzc28=',
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          "data": {
+            "client_id": "flex-sso",
+            "grant_type": "authorization_code",
+            "code": filter.code,
+            "redirect_uri": filter.redirect_uri
+          }
+        };
+        
+        $.ajax(settings).done(function (response) {
+          let serializable = response
+          resolve(serializable)
+        }).fail(function (response) {
+          reject(response)
         })
       })
     },

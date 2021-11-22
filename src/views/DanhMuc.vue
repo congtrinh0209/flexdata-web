@@ -47,19 +47,54 @@
           </div>
         </div>
         <v-layout wrap class="wrap-content-2 pb-0">
-          <!-- <v-flex xs12 md4>
-            <v-text-field
-              class="pr-2 input-form"
+          <v-flex xs12 :class="itemSelect['collectionName'] === 'phuongxa' ? 'md6 pr-2 mb-2' : 'md12 mb-2'" v-if="itemSelect['collectionName'] === 'quanhuyen' || itemSelect['collectionName'] === 'phuongxa'">
+            <v-autocomplete
+              class="flex input-form"
+              hide-no-data
+              :items="itemsTinhThanh"
+              v-model="tinhThanhSearch"
+              item-text="tenMuc"
+              item-value="maMuc"
               dense
               solo
-              placeholder="Nhập mã mục"
-              v-model="dictCode"
-              @keyup.enter=""
               hide-details="auto"
-              height="32px"
-            ></v-text-field>
-          </v-flex> -->
-          <v-flex xs12 md8 class="pr-2">
+              :rules="required"
+              required
+              @change="changeTinhThanhSearch"
+              placeholder="Chọn Tỉnh/ thành"
+            >
+              <template v-slot:selection="data">
+                <span>{{ data.item.tenMuc }} - {{ data.item.maMuc }}</span>
+              </template>
+              <template v-slot:item="data">
+                <span>{{ data.item.tenMuc }} - {{ data.item.maMuc }}</span>
+              </template>
+            </v-autocomplete>
+          </v-flex>
+          <v-flex xs12 md6 v-if="itemSelect['collectionName'] === 'phuongxa'">
+            <v-autocomplete
+              class="flex input-form"
+              hide-no-data
+              :items="itemsQuanHuyenSearch"
+              v-model="quanHuyenSearch"
+              item-text="TenMuc"
+              item-value="MaMuc"
+              dense
+              solo
+              hide-details="auto"
+              :rules="required"
+              required
+              placeholder="Chọn Quận/ huyện"
+            >
+              <template v-slot:selection="data">
+                <span>{{ data.item.TenMuc }} - {{ data.item.MaMuc }}</span>
+              </template>
+              <template v-slot:item="data">
+                <span>{{ data.item.TenMuc }} - {{ data.item.MaMuc }}</span>
+              </template>
+            </v-autocomplete>
+          </v-flex>
+          <v-flex xs12 md6 class="pr-2">
             <v-text-field
               class="input-form"
               dense
@@ -71,7 +106,7 @@
               height="32px"
             ></v-text-field>
           </v-flex>
-          <v-flex xs12 md4 class="">
+          <v-flex xs12 md6 class="">
             <v-autocomplete
               class="input-form"
               dense
@@ -249,7 +284,7 @@
                       class="flex input-form"
                       hide-no-data
                       :items="itemsTinhThanh"
-                      v-model="danhMucCha"
+                      v-model="danhMucChaQuanHuyen"
                       item-text="tenMuc"
                       item-value="maMuc"
                       dense
@@ -268,14 +303,19 @@
                         <span>{{ data.item.tenMuc }} - {{ data.item.maMuc }}</span>
                       </template>
                     </v-autocomplete>
+                  </v-layout>
+                </v-flex>
+                <v-flex class="mb-2" v-if="itemSelect['collectionName'] === 'phuongxa'">
+                  <v-layout wrap>
+                    <div class="flex text-label">
+                    </div>
                     <v-autocomplete
-                      v-if="itemSelect['collectionName'] === 'phuongxa'"
-                      class="flex input-form pl-2"
+                      class="flex input-form"
                       hide-no-data
                       :items="itemsQuanHuyen"
                       v-model="danhMucChaPhuongXa"
-                      item-text="tenMuc"
-                      item-value="maMuc"
+                      item-text="TenMuc"
+                      item-value="MaMuc"
                       dense
                       solo
                       hide-details="auto"
@@ -285,10 +325,10 @@
                       label="Quận/ huyện"
                     >
                       <template v-slot:selection="data">
-                        <span>{{ data.item.tenMuc }} - {{ data.item.maMuc }}</span>
+                        <span>{{ data.item.TenMuc }} - {{ data.item.MaMuc }}</span>
                       </template>
                       <template v-slot:item="data">
-                        <span>{{ data.item.tenMuc }} - {{ data.item.maMuc }}</span>
+                        <span>{{ data.item.TenMuc }} - {{ data.item.MaMuc }}</span>
                       </template>
                     </v-autocomplete>
                   </v-layout>
@@ -368,7 +408,7 @@
       statusFilter: '',
       statusCreate: '',
       itemsDanhMucCha: [],
-      danhMucCha: '',
+      danhMucChaQuanHuyen: '',
       danhMucChaPhuongXa: '',
       dictName: '',
       dictCode: '',
@@ -425,7 +465,7 @@
       ],
       itemsDanhMuc: '',
       page: 0,
-      itemsPerPage: 1,
+      itemsPerPage: 20,
       total: 0,
       pageCount: 0,
       loadingData: false,
@@ -437,15 +477,19 @@
       ghiChu: '',
       itemUpdate: '',
       itemsTinhThanh: [],
-      itemsQuanHuyen: []
+      itemsQuanHuyen: [],
+      itemsQuanHuyenSearch: [],
+      tinhThanhSearch: '',
+      quanHuyenSearch: '',
+      tinhThanhDefault: process.env.VUE_APP_MA_TINH_THANH
     }),
     created () {
       let vm = this
-      console.log('BASE_COLOR_APP', process.env)
       vm.$store.commit('SET_INDEXTAB', 0)
       vm.selectedItem = '1'
       vm.itemSelect = vm.items[0]
       vm.getDanhMuc('reset')
+      vm.getDanhMucCha('tinhthanh')
     },
     computed: {
     },
@@ -457,7 +501,7 @@
         if (item) {
           vm.typeAction = 'update'
           vm.itemUpdate = item
-          vm.danhMucCha = ''
+          vm.danhMucChaQuanHuyen = ''
           vm.danhMucChaPhuongXa = ''
         } else {
           vm.typeAction = 'add'
@@ -468,13 +512,12 @@
             vm.maMuc = item.maMuc
             vm.tenMuc = item.tenMuc
             vm.ghiChu = item.ghiChu
-            if (vm.selectMenu.collectionName === 'quanhuyen') {
-              vm.danhMucCha = item.thamChieu
+            if (vm.itemSelect.collectionName === 'quanhuyen') {
+              vm.danhMucChaQuanHuyen = item.thamChieu
             }
-            if (vm.selectMenu.collectionName === 'phuongxa') {
+            if (vm.itemSelect.collectionName === 'phuongxa') {
               vm.danhMucChaPhuongXa = item.thamChieu
             }
-            vm.danhMucCha = ''
             try {
               vm.statusCreate = vm.itemsStatus.find(function (itemFilter) {
                 return item.tinhTrang == itemFilter.value
@@ -485,18 +528,21 @@
             vm.maMuc = ''
             vm.tenMuc = ''
             vm.ghiChu = ''
-            vm.danhMucCha = ''
+            vm.danhMucChaQuanHuyen = vm.itemsTinhThanh.find(function (item) {
+              return item.maMuc === vm.tinhThanhDefault
+            })
             vm.danhMucChaPhuongXa = ''
             vm.statusCreate = '1'
+            if (vm.itemSelect.collectionName === 'phuongxa') {
+              // vm.getDanhMucCha('quanhuyen')
+              vm.itemsQuanHuyen = vm.itemsQuanHuyenSearch
+              vm.danhMucChaPhuongXa = vm.itemsQuanHuyenSearch.find(function (item) {
+                return item.MaMuc === vm.quanHuyenSearch
+              })
+            }
           }
           vm.$refs.formAddDanhMuc.resetValidation()
         }, 200)
-        if ((vm.itemSelect.collectionName === 'quanhuyen' || vm.itemSelect.collectionName === 'phuongxa') && vm.itemsTinhThanh.length == 0) {
-          vm.getDanhMucCha('tinhthanh')
-        }
-        if (vm.itemSelect.collectionName === 'phuongxa') {
-          vm.getDanhMucCha('quanhuyen')
-        }
       },
       submitAddDanhMuc () {
         let vm = this
@@ -518,9 +564,16 @@
         }
         if (vm.itemSelect.collectionName === 'quanhuyen') {
           vm.dataAction.thamChieu = {
-            maMuc: vm.danhMucCha.maMuc,
-            tenMuc: vm.danhMucCha.tenMuc,
-            type: vm.danhMucCha.type
+            maMuc: vm.danhMucChaQuanHuyen.maMuc,
+            tenMuc: vm.danhMucChaQuanHuyen.tenMuc,
+            type: vm.danhMucChaQuanHuyen.type
+          }
+        }
+        if (vm.itemSelect.collectionName === 'phuongxa') {
+          vm.dataAction.thamChieu = {
+            maMuc: vm.danhMucChaPhuongXa.MaMuc,
+            tenMuc: vm.danhMucChaPhuongXa.TenMuc,
+            type: vm.danhMucChaPhuongXa.type
           }
         }
         if (vm.loading) {
@@ -624,6 +677,7 @@
       },
       getDanhMuc (type) {
         let vm = this
+        let thamChieu = ''
         if (type === 'reset') {
           vm.itemsDanhMuc = []
           vm.total = 0
@@ -632,6 +686,12 @@
         }
         if (vm.loadingData) {
           return
+        }
+        if (vm.itemSelect.collectionName === 'quanhuyen') {
+          thamChieu = vm.tinhThanhSearch
+        }
+        if (vm.itemSelect.collectionName === 'phuongxa') {
+          thamChieu = vm.quanHuyenSearch
         }
         vm.loadingData = true
         let filter = {
@@ -642,7 +702,8 @@
             size: vm.itemsPerPage,
             orderFields: 'maMuc',
             orderTypes: 'asc',
-            tinhTrang: !vm.statusFilter ? '1,0' : vm.statusFilter
+            tinhTrang: !vm.statusFilter ? '1,0' : vm.statusFilter,
+            thamChieu_maMuc: thamChieu
           }
         }
         vm.$store.dispatch('collectionFilter', filter).then(function (response) {
@@ -654,7 +715,7 @@
           vm.loadingData = false
         })
       },
-      getDanhMucCha (name) {
+      getDanhMucCha (name, type, getData) {
         let vm = this
         let filter = {
           collectionName: name,
@@ -664,26 +725,55 @@
             size: 100,
             orderFields: 'maMuc',
             orderTypes: 'asc',
-            tinhTrang: '1'
+            tinhTrang: '1',
+            thamChieu_maMuc: ''
+          }
+        }
+        if (name === 'quanhuyen') {
+          if (type === 'search') {
+            filter.data.thamChieu_maMuc = vm.tinhThanhSearch
+          } else {
+            filter.data.thamChieu_maMuc = vm.danhMucChaQuanHuyen['maMuc']
           }
         }
         vm.$store.dispatch('collectionFilter', filter).then(function (response) {
           if (name === 'tinhthanh') {
             vm.itemsTinhThanh = response.content
+            if (vm.tinhThanhDefault) {
+              vm.tinhThanhSearch = vm.tinhThanhDefault
+            }
           } else {
-            vm.itemsQuanHuyen = response.content
+            if (type === 'search') {
+              vm.itemsQuanHuyenSearch = response.content
+              vm.quanHuyenSearch = vm.itemsQuanHuyenSearch[0]['MaMuc']
+              if (getData) {
+                vm.getDanhMuc()
+              }
+            } else {
+              vm.itemsQuanHuyen = response.content
+              vm.danhMucChaPhuongXa = vm.itemsQuanHuyen.find(function (item) {
+                item.MaMuc === vm.quanHuyenSearch
+              })
+            }
           }
         }).catch(function () {
         })
       },
       changeTinhThanh () {
         let vm = this
-        if (vm.selectMenu.collectionName === 'phuongxa' && vm.danhMucCha) {
+        if (vm.itemSelect.collectionName === 'phuongxa' && vm.danhMucChaQuanHuyen) {
           setTimeout (function () {
             vm.getDanhMucCha('quanhuyen')
           }, 200)
         }
-        
+      },
+      changeTinhThanhSearch () {
+        let vm = this
+        if (vm.itemSelect.collectionName === 'phuongxa' && vm.tinhThanhSearch) {
+          setTimeout (function () {
+            vm.getDanhMucCha('quanhuyen', 'search')
+          }, 200)
+        }
       },
       selectMenu(item, index) {
         let vm = this
@@ -691,7 +781,13 @@
         vm.itemSelect = item
         vm.dictName = ''
         vm.statusFilter = ''
-        vm.getDanhMuc()
+        if (vm.itemSelect.collectionName === 'phuongxa') {
+          setTimeout (function () {
+            vm.getDanhMucCha('quanhuyen', 'search', 'getData')
+          }, 50)
+        } else {
+          vm.getDanhMuc()
+        }
       },
       changePage(config) {
         let vm = this

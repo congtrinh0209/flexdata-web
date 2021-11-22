@@ -55,13 +55,20 @@
                 </div>
               </v-flex>
               
-              <v-flex xs12 class="mt-0 text-xs-center">
-                <v-btn class="my-0 white--text" color="#940404"
+              <v-flex xs12 class="mt-0 text-xs-center ">
+                <v-btn class="my-0 white--text mr-3" color="#940404"
                   :loading="loading"
                   :disabled="loading"
                   @click="submitConfirmLogin"
                 >
                   Đăng nhập
+                </v-btn>
+                <v-btn class="my-0 white--text" color="#940404"
+                  :loading="loading"
+                  :disabled="loading"
+                  @click="loginKeyCloak"
+                >
+                  Đăng nhập Keyclock
                 </v-btn>
               </v-flex>
             </v-form>
@@ -71,24 +78,55 @@
       
     </v-container>
     <img class="img-login-logo" :src="`${publicPath}/images/image-login.png`">
+    <div class="text-center">
+      <v-overlay :value="overlay">
+        <v-progress-circular
+          indeterminate
+          size="64"
+        ></v-progress-circular>
+      </v-overlay>
+    </div>
   </div>
   
 </template>
 
 <script>
+  import Vue from 'vue'
+  import axios from 'axios'
+  import toastr from 'toastr'
+  toastr.options = {
+    'closeButton': true,
+    'timeOut': '5000',
+    "positionClass": "toast-top-center"
+  }
   export default {
     name: 'Login',
 
     data: () => ({
       titleLogin: process.env.VUE_APP_TITLE_LOGIN,
       publicPath: process.env.VUE_APP_PULIC_PATH,
+      apiSso: process.env.VUE_APP_PATH_API_SSO,
+      overlay: false,
       loading: false,
       valid: true,
       userName: '',
-      password: ''
+      password: '',
+      client_secret: '',
+      code: ''
     }),
     created () {
       let vm = this
+      let searchParams = ''
+      let params = window.location.search.substring(1)
+      if (params) {
+        let isLogin = Vue.$cookies.get('Token')
+        searchParams = JSON.parse('{"' + decodeURI(params).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}')
+        if (!isLogin && searchParams && searchParams['code']) {
+          vm.overlay = true
+          vm.code = searchParams['code']
+          vm.getToken()
+        }
+      }
     },
     computed: {
     },
@@ -96,6 +134,53 @@
       submitConfirmLogin () {
         let vm = this
         vm.$router.push({ path: '/danh-muc' })
+      },
+      loginKeyCloak () {
+        let vm = this
+        if (vm.loading) {
+          return
+        }
+        vm.loading = true
+        let filter = {
+          uri: process.env.VUE_APP_PATH_REDIRECT_SSO
+        }
+        vm.$store.dispatch('loginKeyCloak', filter).then(function (result) {
+          vm.loading = false
+          if (result) {
+            window.location.href = result.endpoint
+          }
+        }).catch(function (result) {
+          vm.loading = false
+        })
+      },
+      getToken () {
+        let vm = this
+        vm.loading = false
+        let filter = {
+          code: vm.code,
+          redirect_uri: process.env.VUE_APP_PATH_REDIRECT_SSO
+        }
+        vm.$store.dispatch('getTokenKeyCloak', filter).then(function (result) {
+          vm.loading = false
+          vm.overlay = false
+          console.log('tokenObj', result)
+          if (result.access_token) {
+            vm.$cookies.set('Token',result.access_token,60 * 60 * 10)
+            axios.defaults.headers['Authorization'] = 'Bearer ' + result.access_token
+            let dataUser = {
+              role_name: '',
+              user_id: ''
+            }
+            localStorage.setItem('user', JSON.stringify(dataUser))
+            vm.$store.commit('SET_ISSIGNED', true)
+            vm.$router.push({ path: '/danh-muc' })
+          }
+          
+        }).catch(function (result) {
+          vm.loading = false
+          vm.overlay = false
+          toastr.error('Đăng nhập không thành công')
+        })
       },
       getPassword () {
         let vm = this

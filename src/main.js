@@ -13,8 +13,38 @@ const baseURL = process.env.VUE_APP_PATH_API
 if (typeof baseURL !== 'undefined') {
   axios.defaults.baseURL = baseURL
 }
+axios.interceptors.response.use((response) => {
+  // console.log('response', response)
+  return response
+}, error => {
+  // console.warn('Error status 123', error.response)
+  if (error.response.status == 401) {
+    store.commit('SET_ISSIGNED', '')
+    Vue.$cookies.set('Token', null)
+    // return refreshToken().then(rs => {
+    //         console.log('get token refreshToken>>', rs.data)
+    //         const { token } = rs.data
+    //         instance.setToken(token);
+    //         const config = response.config
+    //         config.headers['x-access-token'] = token
+    //         config.baseURL = 'http://localhost:3000/'
+    //         return instance(config)
+    //     })
+    if (error.response.config.url === '/v1/datasharing/tinhthanh/filter') {
+      router.push({ path: '/login' })
+    }
+  }
+  if (error.response) {
+      return parseError(error.response.data)
+  } else {
+      return Promise.reject(error)
+  }
+})
+
 if (Vue.$cookies.get('Token')) {
   store.commit('SET_ISSIGNED', true)
+  axios.defaults.headers['Authorization'] = 'Bearer ' + Vue.$cookies.get('Token')
+  router.push({ path: '/danh-muc' })
 } else {
   store.commit('SET_ISSIGNED', false)
   localStorage.setItem('user', null)
