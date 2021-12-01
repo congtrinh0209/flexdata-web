@@ -2,8 +2,7 @@
     <div>
         <v-row align-content="center">
             <v-col cols="12" class="mt-0 pb-2">
-                <div class="title-page" v-if="type === 'cong-dan'">TÌM KIẾM THÔNG TIN CÔNG DÂN</div>
-                <div class="title-page" v-else>TÌM KIẾM THÔNG TIN TỔ CHỨC, DOANH NGHIỆP</div>  
+                <div class="title-page">TÌM KIẾM THÔNG TIN TỔ CHỨC, DOANH NGHIỆP</div>  
             </v-col>
             <v-col cols="12" md="6" class="my-0 py-0 mb-2">
                 <label>Thông tin tìm kiếm</label>
@@ -15,7 +14,7 @@
                     clearable
                     max
                     hide-details="auto"
-                    placeholder="Họ tên, số cmnd/ cccd, ..."
+                    placeholder="Tên tổ chức, doanh nghiệp, mã tổ chức, doanh nghiệp, ..."
                     @keyup.enter="getDanhMuc()"
                 ></v-text-field>
             </v-col>
@@ -83,7 +82,7 @@
                 >
                 <v-icon size="18">mdi-plus</v-icon>&nbsp;
                 Thêm mới
-              </v-btn>
+                </v-btn>
             </v-col>
             <v-col cols="12" md="6" class="d-flex align-center justify-end">
                 <v-btn color="primary" small class="mt-2 mx-0 text-white" @click="getDanhMuc()">
@@ -125,12 +124,12 @@
                             </div>
                         </template>
                         <template v-slot:item.danhBaLienLac="{ item }">
-                            <div>
-                                <v-icon size="16">mdi-phone-in-talk-outline</v-icon>&nbsp; {{ item.danhBaLienLac['soDienThoai'] }}
-                            </div>
-                            <div>
-                                <v-icon size="16">mdi-email-fast-outline</v-icon>&nbsp; {{ item.danhBaLienLac['thuDienTu'] }}
-                            </div>
+                          <div>
+                              <v-icon size="16">mdi-phone-in-talk-outline</v-icon>&nbsp; {{ item.danhBaLienLac['soDienThoai'] }}
+                          </div>
+                          <div>
+                              <v-icon size="16">mdi-email-fast-outline</v-icon>&nbsp; {{ item.danhBaLienLac['thuDienTu'] }}
+                          </div>
                         </template>
                         <template v-slot:item.status="{ item }">
                             <div>
@@ -140,7 +139,7 @@
                         <template v-slot:item.action="{ item }">
                             <div>
                                 <router-link
-                                    :to="'/thong-tin-ca-nhan/' + item.primKey"
+                                    :to="'/thong-tin-doanh-nghiep/' + item.primKey"
                                     custom
                                 >
                                     <span>Xem chi tiết</span>
@@ -166,9 +165,9 @@ export default {
       return {
         selected: [],
         keywordSearch: '',
-        loadingData: false,
         itemsTinhTrang: [],
         tinhTrangSearch: '',
+        loadingData: false,
         headers: [
             {
                 sortable: false,
@@ -178,19 +177,19 @@ export default {
             },
             {
                 sortable: false,
-                text: 'Họ tên / ngày sinh',
+                text: 'Tên tổ chức, doanh nghiệp',
                 align: 'left',
-                value: 'hoVaTen'
+                value: 'tenGoi'
             },
             {
                 sortable: false,
-                text: 'CMND/CCCD',
+                text: 'Mã tổ chức, doanh nghiệp',
                 align: 'left',
-                value: 'maSoCaNhan'
+                value: 'maSoDoanhNghiep'
             },
             {
                 sortable: false,
-                text: 'Điện thoại/ Email',
+                text: 'Email/ Điện thoại',
                 align: 'left',
                 value: 'danhBaLienLac'
             },
@@ -218,20 +217,20 @@ export default {
     },
     created () {
       let vm = this
-      vm.$store.commit('SET_INDEXTAB', 1)
+      vm.$store.commit('SET_INDEXTAB', 2)
       vm.getDanhMuc('reset')
       vm.getDanhMucSearch('tinhtrangsudungtaikhoan')
     },
     watch: {
       '$route': function (newRoute, oldRoute) {
         let vm = this
-        vm.$store.commit('SET_INDEXTAB', 1)
+        vm.$store.commit('SET_INDEXTAB', 2)
       },
     },
     methods: {
       showForm () {
         let vm = this
-        vm.$router.push({ path: '/cong-dan/0' })
+        vm.$router.push({ path: '/doanh-nghiep/0' })
       },
       getDanhMuc (type) {
         let vm = this
@@ -246,7 +245,7 @@ export default {
         }
         vm.loadingData = true
         let filter = {
-          collectionName: 'canhan',
+          collectionName: 'donvikinhdoanh',
           data: {
             keyword: vm.keywordSearch,
             page: vm.page,

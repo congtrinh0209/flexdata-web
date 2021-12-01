@@ -3,7 +3,7 @@
         <v-row>
             <v-col cols="12" md="8">
                 <div class="d-flex justify-space-between mb-4">
-                    <div class="title-page">THÔNG TIN CÔNG DÂN</div>
+                    <div class="title-page">THÔNG TIN TỔ CHỨC, DOANH NGHIỆP</div>
                     <div>
                         <v-btn
                             class="mx-0"
@@ -32,6 +32,8 @@
                                         </span>
                                         <span v-else></span>
                                       </span>
+                                      <span v-else-if="item.value === 'nguoiDaiDienHoTen'">{{thongTinCongDan['nguoiDaiDien'] ? thongTinCongDan['nguoiDaiDien']['hoVaTen'] : ''}}</span>
+                                      <span v-else-if="item.value === 'nguoiDaiDienMaSoCaNhan'">{{thongTinCongDan['nguoiDaiDien'] ? thongTinCongDan['nguoiDaiDien']['maSoCaNhan'] : ''}}</span>
                                       <span v-else-if="item.value === 'sdt'">{{thongTinCongDan['danhBaLienLac'] ? thongTinCongDan['danhBaLienLac']['soDienThoai'] : ''}}</span>
                                       <span v-else-if="item.value === 'email'">{{thongTinCongDan['danhBaLienLac'] ? thongTinCongDan['danhBaLienLac']['thuDienTu'] : ''}}</span>
                                       <span v-else>{{ thongTinCongDan[item.value]}}</span>
@@ -88,11 +90,11 @@
                 <v-card class="pt-4">
                     <div class="d-flex align-center flex-column">
                         <img class="mb-4" style="width: 226px; height: 226px;" :src="`${publicPath}/images/avt.png`">
-                        <h4 class="title-page">{{thongTinCongDan['hoVaTen']}}</h4>
+                        <h4 class="title-page">{{thongTinCongDan['tenGoi']}}</h4>
                         <v-layout class="mt-4" wrap style="width: 350px;">
-                            <v-flex xs5>Số CMND/ CCCD:</v-flex>
+                            <v-flex xs5>Mã tổ chức, doanh nghiệp:</v-flex>
                             <v-flex xs7 class="mb-2">
-                                <span class="font-weight-bold">{{thongTinCongDan['maSoCaNhan']}}</span>
+                                <span class="font-weight-bold">{{thongTinCongDan['maSoDoanhNghiep']}}</span>
                             </v-flex>
                             <v-flex xs5>Trạng thái:</v-flex>
                             <v-flex xs7>
@@ -189,32 +191,28 @@ export default {
             pageCount: 10,
             thongTin:  [
                 {
-                    lable: 'Họ tên',
-                    value: 'hoVaTen'
+                    lable: 'Tên tổ chức, doanh nghiệp',
+                    value: 'tenGoi'
                 },
                 {
-                    lable: 'Ngày sinh',
-                    value: 'ngaySinh',
-                    type: 'date'
+                    lable: 'Mã số tổ chức, doanh nghiệp',
+                    value: 'maSoDoanhNghiep'
                 },
                 {
-                    lable: 'Giới tính',
-                    value: 'gioiTinh',
-                    type: 'danhmuc'
+                    lable: 'Tên tiếng anh',
+                    value: 'tenTiengAnh'
                 },
                 {
-                    lable: 'Dân tộc',
-                    value: 'danToc',
-                    type: 'danhmuc'
+                    lable: 'Tên viết tắt',
+                    value: 'tenVietTat'
                 },
                 {
-                    lable: 'Quốc gia',
-                    value: 'quocTich',
-                    type: 'danhmuc'
+                    lable: 'Họ tên người đại diện',
+                    value: 'nguoiDaiDienHoTen'
                 },
                 {
-                    lable: 'CMND/CCCD',
-                    value: 'maSoCaNhan'
+                    lable: 'Số CMND/ CCCD người đại diện',
+                    value: 'nguoiDaiDienMaSoCaNhan'
                 },
                 {
                     lable: 'Số điện thoại',
@@ -225,19 +223,10 @@ export default {
                     value: 'email'
                 },
                 {
-                    lable: 'Địa chỉ thường trú',
-                    value: 'diaChiThuongTru',
+                    lable: 'Địa chỉ hoạt động',
+                    value: 'diaChiHoatDong',
                     type: 'address'
-                },
-                {
-                    lable: 'Nơi ở hiện tại',
-                    value: 'noiOHienTai',
-                    type: 'address'
-                },
-                // {
-                //     lable: 'Giấy tờ tùy thân',
-                //     value: 'action'
-                // }
+                }
             
             ],
             thongTinCongDan: ''
@@ -245,7 +234,7 @@ export default {
     },
     created () {
       let vm = this
-      vm.$store.commit('SET_INDEXTAB', 1)
+      vm.$store.commit('SET_INDEXTAB', 2)
       vm.getThongTinCongDan()
     },
     methods: {
@@ -260,12 +249,12 @@ export default {
           }
       },
       editCongDan(id) {
-        this.$router.push({ path: '/cong-dan/' + id })
+        this.$router.push({ path: '/doanh-nghiep/' + id })
       },
       getThongTinCongDan () {
         let vm = this
         let filter = {
-          collectionName: 'canhan',
+          collectionName: 'donvikinhdoanh',
           id: vm.id
         }
         vm.$store.dispatch('collectionDetail', filter).then(function (response) {

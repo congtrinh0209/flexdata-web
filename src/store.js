@@ -7,6 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     indexTab: 0,
+    apiSso: process.env.VUE_APP_PATH_API_SSO
   },
   getters: {
     getIndexTab: (state) => state.indexTab,
@@ -108,6 +109,7 @@ export default new Vuex.Store({
         let config = {
           method: 'get',
           url: '/v1/datasharing/' + filter.collectionName + '/' + filter.id,
+          data: {},
           headers: { 
             'Accept': 'application/json', 
             'Content-Type': 'application/json'
@@ -118,6 +120,74 @@ export default new Vuex.Store({
           resolve(serializable)
         }).catch(function (error) {
           reject(error)
+        })
+      })
+    },
+    loginKeyCloak ({commit, state}, filter) {
+      return new Promise((resolve, reject) => {
+        let settings = {
+          "url": state.apiSso + '/flex/oauth2/authorization_endpoint?redirect_uri=' + filter.uri,
+          "method": "GET",
+          "headers": {
+            'Secret': 'JHoZK5AA9WCK6R3Dclj80o2uIpWCspN3',
+            'Content-Type': 'application/json'
+          },
+        };
+        
+        $.ajax(settings).done(function (response) {
+          resolve(response)
+        }).fail(function (response) {
+          reject(response)
+        })
+      })
+    },
+    getTokenKeyCloak ({commit, state}, filter) {
+      return new Promise((resolve, reject) => {
+        let settings = {
+          "url": state.apiSso + '/flex/oauth2/token',
+          "method": "POST",
+          "headers": {
+            'Authorization': 'Basic ZmxleDpzc28=',
+            'secret': 'JHoZK5AA9WCK6R3Dclj80o2uIpWCspN3',
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          "data": {
+            "code": filter.code,
+            "redirect_uri": filter.redirect_uri
+          }
+        };
+        
+        $.ajax(settings).done(function (response) {
+          let serializable = response
+          resolve(serializable)
+        }).fail(function (response) {
+          reject(response)
+        })
+      })
+    },
+    getRefreshTokenKeyCloak ({commit, state}, filter) {
+      return new Promise((resolve, reject) => {
+        let settings = {
+          "url": state.apiSso + '/flex/oauth2/refresh_token',
+          "method": "POST",
+          "headers": {
+            'Authorization': 'Basic ZmxleDpzc28=',
+            'secret': 'JHoZK5AA9WCK6R3Dclj80o2uIpWCspN3',
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          "data": {
+            "code": filter.code,
+            "redirect_uri": filter.redirect_uri
+          }
+        };
+        
+        $.ajax(settings).done(function (response) {
+          let serializable = response
+          resolve(serializable)
+        }).fail(function (response) {
+          reject(response)
         })
       })
     },

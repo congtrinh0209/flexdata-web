@@ -28,9 +28,8 @@ export default {
   }),
   created () {
     let router = this.$router.history.current
-    console.log('router', router)
     if (router.path === '/') {
-      this.$router.push({ path: '/danh-muc' })
+      this.$router.push({ path: '/login' })
     }
   }
 };
