@@ -13,7 +13,7 @@
           <div class="text-1 text-1-1">{{titleLogin}}</div>
         </div>
 
-        <div class="wrap-form">
+        <div class="wrap-form" v-if="!signed">
           <div class="text-login">Đăng nhập</div>
           <div>
             <v-form ref="form" v-model="valid" lazy-validation class="mt-2">
@@ -47,20 +47,21 @@
                 ></v-text-field>
               </v-flex>
               
-              <v-flex xs12 class="text-right" style="margin-top: 15px; margin-bottom: 15px">
+              <!-- <v-flex xs12 class="text-right" style="margin-top: 15px; margin-bottom: 15px">
                 <div class="d-inline-block" style="cursor: pointer;">
                   <p class="mb-0" @click="getPassword" style="color: #940404">
                   Quên mật khẩu?
                   </p>
                 </div>
-              </v-flex>
+              </v-flex> -->
               
-              <v-flex xs12 class="mt-0 text-xs-center ">
+              <v-flex xs12 class="mt-6 text-xs-center ">
                 <v-btn class="my-0 white--text mr-3" color="#940404"
                   :loading="loading"
                   :disabled="loading"
                   @click="submitConfirmLogin"
                 >
+                  <v-icon size="20">mdi-login</v-icon>&nbsp;
                   Đăng nhập
                 </v-btn>
                 <v-btn class="my-0 white--text" color="#940404"
@@ -68,11 +69,35 @@
                   :disabled="loading"
                   @click="loginKeyCloak"
                 >
+                  <v-icon size="20">mdi-account-key-outline</v-icon>&nbsp;
                   Đăng nhập Keyclock
                 </v-btn>
               </v-flex>
             </v-form>
           </div>
+        </div>
+        <div class="wrap-form" v-if="signed">
+          <div class="text-login">TÀI KHOẢN ĐÃ ĐĂNG NHẬP HỆ THỐNG</div>
+          <v-flex xs12 class="mt-6 text-xs-center ">
+            <v-btn class="my-0 white--text mr-3" color="#940404"
+              :loading="loading"
+              :disabled="loading"
+              @click="submitLogout"
+            >
+              <div class="v-btn__content">
+                <v-icon size="18">mdi-logout-variant</v-icon>&nbsp;
+                <span>Đăng xuất</span>
+              </div>
+            </v-btn>
+            <v-btn class="my-0 white--text" color="#940404"
+              :loading="loading"
+              :disabled="loading"
+              @click="submitConfirmLogin"
+            >
+                <v-icon size="20">mdi-home-circle-outline</v-icon>&nbsp;
+                <span>Truy cập hệ thống</span>
+            </v-btn>
+          </v-flex>
         </div>
       </div> 
       
@@ -112,7 +137,8 @@
       userName: '',
       password: '',
       client_secret: '',
-      code: ''
+      code: '',
+      signed: false
     }),
     created () {
       let vm = this
@@ -126,6 +152,11 @@
           vm.code = searchParams['code']
           vm.getToken()
         }
+      }
+      if (Vue.$cookies.get('Token')) {
+        vm.signed = true
+      } else {
+        vm.signed = false
       }
     },
     computed: {
@@ -163,9 +194,10 @@
         vm.$store.dispatch('getTokenKeyCloak', filter).then(function (result) {
           vm.loading = false
           vm.overlay = false
-          console.log('tokenObj', result)
+          // console.log('tokenObj', result)
           if (result.access_token) {
-            vm.$cookies.set('Token',result.access_token,60 * 60 * 10)
+            vm.$cookies.set('Token', result.access_token, result.expires_in)
+            vm.$cookies.set('RefreshToken', result.refresh_token, result.refresh_expires_in)
             axios.defaults.headers['Authorization'] = 'Bearer ' + result.access_token
             let dataUser = {
               role_name: '',
@@ -173,7 +205,7 @@
             }
             localStorage.setItem('user', JSON.stringify(dataUser))
             vm.$store.commit('SET_ISSIGNED', true)
-            vm.$router.push({ path: '/danh-muc' })
+            window.location.href = window.location.origin + window.location.pathname + "#/danh-muc"
           }
           
         }).catch(function (result) {
@@ -181,6 +213,14 @@
           vm.overlay = false
           toastr.error('Đăng nhập không thành công')
         })
+      },
+      submitLogout () {
+        let vm = this
+        vm.signed = false
+        vm.$store.commit('SET_ISSIGNED', false)
+        localStorage.setItem('user', null)
+        vm.$cookies.set('Token', '')
+        vm.$cookies.set('RefreshToken', '')
       },
       getPassword () {
         let vm = this
@@ -238,7 +278,7 @@
     text-transform: uppercase;
   }
   .wrap-form {
-    width: 420px;
+    width: 465px;
     margin-top: 80px
   }
   .text-login {

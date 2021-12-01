@@ -77,8 +77,8 @@
               hide-no-data
               :items="itemsQuanHuyenSearch"
               v-model="quanHuyenSearch"
-              item-text="TenMuc"
-              item-value="MaMuc"
+              item-text="tenMuc"
+              item-value="maMuc"
               dense
               solo
               hide-details="auto"
@@ -87,10 +87,10 @@
               placeholder="Chọn Quận/ huyện"
             >
               <template v-slot:selection="data">
-                <span>{{ data.item.TenMuc }} - {{ data.item.MaMuc }}</span>
+                <span>{{ data.item.tenMuc }} - {{ data.item.maMuc }}</span>
               </template>
               <template v-slot:item="data">
-                <span>{{ data.item.TenMuc }} - {{ data.item.MaMuc }}</span>
+                <span>{{ data.item.tenMuc }} - {{ data.item.maMuc }}</span>
               </template>
             </v-autocomplete>
           </v-flex>
@@ -314,8 +314,8 @@
                       hide-no-data
                       :items="itemsQuanHuyen"
                       v-model="danhMucChaPhuongXa"
-                      item-text="TenMuc"
-                      item-value="MaMuc"
+                      item-text="tenMuc"
+                      item-value="maMuc"
                       dense
                       solo
                       hide-details="auto"
@@ -325,10 +325,10 @@
                       label="Quận/ huyện"
                     >
                       <template v-slot:selection="data">
-                        <span>{{ data.item.TenMuc }} - {{ data.item.MaMuc }}</span>
+                        <span>{{ data.item.tenMuc }} - {{ data.item.maMuc }}</span>
                       </template>
                       <template v-slot:item="data">
-                        <span>{{ data.item.TenMuc }} - {{ data.item.MaMuc }}</span>
+                        <span>{{ data.item.tenMuc }} - {{ data.item.maMuc }}</span>
                       </template>
                     </v-autocomplete>
                   </v-layout>
@@ -489,7 +489,6 @@
       vm.selectedItem = '1'
       vm.itemSelect = vm.items[0]
       vm.getDanhMuc('reset')
-      vm.getDanhMucCha('tinhthanh')
     },
     computed: {
     },
@@ -516,6 +515,8 @@
               vm.danhMucChaQuanHuyen = item.thamChieu
             }
             if (vm.itemSelect.collectionName === 'phuongxa') {
+              vm.itemsQuanHuyen = vm.itemsQuanHuyenSearch
+              vm.danhMucChaQuanHuyen = vm.tinhThanhSearch
               vm.danhMucChaPhuongXa = item.thamChieu
             }
             try {
@@ -528,16 +529,17 @@
             vm.maMuc = ''
             vm.tenMuc = ''
             vm.ghiChu = ''
-            vm.danhMucChaQuanHuyen = vm.itemsTinhThanh.find(function (item) {
-              return item.maMuc === vm.tinhThanhDefault
-            })
+            // vm.danhMucChaQuanHuyen = vm.itemsTinhThanh.find(function (item) {
+            //   return item.maMuc === vm.tinhThanhDefault
+            // })
+            vm.danhMucChaQuanHuyen = vm.tinhThanhSearch
             vm.danhMucChaPhuongXa = ''
             vm.statusCreate = '1'
             if (vm.itemSelect.collectionName === 'phuongxa') {
               // vm.getDanhMucCha('quanhuyen')
               vm.itemsQuanHuyen = vm.itemsQuanHuyenSearch
               vm.danhMucChaPhuongXa = vm.itemsQuanHuyenSearch.find(function (item) {
-                return item.MaMuc === vm.quanHuyenSearch
+                return item.maMuc === vm.quanHuyenSearch
               })
             }
           }
@@ -571,8 +573,8 @@
         }
         if (vm.itemSelect.collectionName === 'phuongxa') {
           vm.dataAction.thamChieu = {
-            maMuc: vm.danhMucChaPhuongXa.MaMuc,
-            tenMuc: vm.danhMucChaPhuongXa.TenMuc,
+            maMuc: vm.danhMucChaPhuongXa.maMuc,
+            tenMuc: vm.danhMucChaPhuongXa.tenMuc,
             type: vm.danhMucChaPhuongXa.type
           }
         }
@@ -600,6 +602,8 @@
             }
             toastr.error('Thêm danh mục thất bại')
           })
+        } else {
+          vm.loading = false
         }
       },
       submitUpdateDanhMuc () {
@@ -739,20 +743,20 @@
         vm.$store.dispatch('collectionFilter', filter).then(function (response) {
           if (name === 'tinhthanh') {
             vm.itemsTinhThanh = response.content
-            if (vm.tinhThanhDefault) {
-              vm.tinhThanhSearch = vm.tinhThanhDefault
-            }
+            // if (vm.tinhThanhDefault) {
+            //   vm.tinhThanhSearch = vm.tinhThanhDefault
+            // }
           } else {
             if (type === 'search') {
               vm.itemsQuanHuyenSearch = response.content
-              vm.quanHuyenSearch = vm.itemsQuanHuyenSearch[0]['MaMuc']
+              vm.quanHuyenSearch = vm.itemsQuanHuyenSearch[0]['maMuc']
               if (getData) {
                 vm.getDanhMuc()
               }
             } else {
               vm.itemsQuanHuyen = response.content
               vm.danhMucChaPhuongXa = vm.itemsQuanHuyen.find(function (item) {
-                item.MaMuc === vm.quanHuyenSearch
+                item.maMuc === vm.quanHuyenSearch
               })
             }
           }
@@ -781,12 +785,16 @@
         vm.itemSelect = item
         vm.dictName = ''
         vm.statusFilter = ''
+        if (vm.itemSelect.collectionName === 'quanhuyen' || vm.itemSelect.collectionName === 'phuongxa') {
+          vm.getDanhMucCha('tinhthanh')
+          vm.tinhThanhSearch = vm.tinhThanhDefault
+        }
         if (vm.itemSelect.collectionName === 'phuongxa') {
           setTimeout (function () {
             vm.getDanhMucCha('quanhuyen', 'search', 'getData')
           }, 50)
         } else {
-          vm.getDanhMuc()
+          vm.getDanhMuc('reset')
         }
       },
       changePage(config) {

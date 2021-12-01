@@ -3,18 +3,18 @@
         <v-row>
             <v-col cols="12" md="8">
                 <div class="d-flex justify-space-between mb-4">
-                  <h3 class="title-page" v-if="typeAction == 'update'">CẬP NHẬT THÔNG TIN CÔNG DÂN</h3>
-                  <h3 class="title-page" v-if="typeAction == 'add'">THÊM MỚI CÔNG DÂN</h3>
+                  <h3 class="title-page" v-if="typeAction == 'update'">CẬP NHẬT THÔNG TIN TỔ CHỨC, DOANH NGHIỆP</h3>
+                  <h3 class="title-page" v-if="typeAction == 'add'">THÊM MỚI TỔ CHỨC, DOANH NGHIỆP</h3>
                 </div>
             </v-col>
         </v-row>
         <v-form lazy-validation ref="formAddCaNhan" v-model="validFormAdd">
             <v-row>
                 <v-col cols="12" md="6" class="py-0 mb-2">
-                    <label>Họ tên <span class="red--text">(*)</span></label>
+                    <label>Tên tổ chức, doanh nghiệp <span class="red--text">(*)</span></label>
                     <v-text-field
                       class="input-form"
-                      v-model="thongTinCongDan.hoVaTen"
+                      v-model="thongTinDoanhNghiep.tenGoi"
                       solo
                       dense
                       clearable
@@ -25,10 +25,10 @@
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6" class="py-0">
-                    <label>CMND/CCCD <span class="red--text">(*)</span></label>
+                    <label>Mã số tổ chức, doanh nghiệp <span class="red--text">(*)</span></label>
                     <v-text-field
                       class="input-form"
-                      v-model="thongTinCongDan.maSoCaNhan"
+                      v-model="thongTinDoanhNghiep.maSoDoanhNghiep"
                       solo
                       dense
                       clearable
@@ -38,13 +38,11 @@
                       required
                     ></v-text-field>
                 </v-col>
-                <v-col cols="12" md="3" class="py-0 mb-2">
-                    <label>Ngày sinh <span class="red--text">(*)</span></label>
+                <v-col cols="12" md="6" class="py-0 mb-2">
+                    <label>Tên viết tắt <span class="red--text">(*)</span></label>
                     <v-text-field
                       class="input-form"
-                      v-model="ngaySinhCreate"
-                      placeholder="dd/mm/yyyy, ddmmyyyy"
-                      @blur="formatBirthDate"
+                      v-model="thongTinDoanhNghiep.tenVietTat"
                       solo
                       dense
                       clearable
@@ -54,68 +52,25 @@
                       required
                     ></v-text-field>
                 </v-col>
-                <v-col cols="12" md="3" class="py-0">
-                    <label>Giới tính <span class="red--text">(*)</span></label>
-                    <v-autocomplete
-                      class="flex input-form"
-                      hide-no-data
-                      :items="itemsGioiTinh"
-                      v-model="gioiTinhCreate"
-                      item-text="tenMuc"
-                      item-value="maMuc"
-                      dense
+                <v-col cols="12" md="6" class="py-0 mb-2">
+                    <label>Tên tiếng anh <span class="red--text">(*)</span></label>
+                    <v-text-field
+                      class="input-form"
+                      v-model="thongTinDoanhNghiep.tenTiengAnh"
                       solo
+                      dense
+                      clearable
+                      max
                       hide-details="auto"
                       :rules="required"
                       required
-                      placeholder="Chọn giới tính"
-                      return-object
-                    >
-                    </v-autocomplete>
-                </v-col>
-                <v-col cols="12" md="3" class="py-0">
-                    <label>Dân tộc <span class="red--text">(*)</span></label>
-                    <v-autocomplete
-                      class="flex input-form"
-                      hide-no-data
-                      :items="itemsDanToc"
-                      v-model="danTocCreate"
-                      item-text="tenMuc"
-                      item-value="maMuc"
-                      dense
-                      solo
-                      hide-details="auto"
-                      :rules="required"
-                      required
-                      placeholder="Chọn dân tộc"
-                      return-object
-                    >
-                    </v-autocomplete>
-                </v-col>
-                <v-col cols="12" md="3" class="py-0">
-                    <label>Quốc tịch <span class="red--text">(*)</span></label>
-                    <v-autocomplete
-                      class="flex input-form"
-                      hide-no-data
-                      :items="itemsQuocTich"
-                      v-model="quocTichCreate"
-                      item-text="tenMuc"
-                      item-value="maMuc"
-                      dense
-                      solo
-                      hide-details="auto"
-                      :rules="required"
-                      required
-                      placeholder="Chọn quốc tịch"
-                      return-object
-                    >
-                    </v-autocomplete>
+                    ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6" class="py-0 mb-2">
                     <label>Email</label>
                     <v-text-field
                         class="input-form"
-                        v-model="thongTinCongDan.danhBaLienLac['thuDienTu']"
+                        v-model="thongTinDoanhNghiep.danhBaLienLac['thuDienTu']"
                         solo
                         dense
                         clearable
@@ -123,11 +78,11 @@
                         hide-details="auto"
                     ></v-text-field>
                 </v-col>
-                <v-col cols="12" md="3" class="py-0">
+                <v-col cols="12" md="6" class="py-0">
                     <label>Điện thoại</label>
                     <v-text-field
                         class="input-form"
-                        v-model="thongTinCongDan.danhBaLienLac['soDienThoai']"
+                        v-model="thongTinDoanhNghiep.danhBaLienLac['soDienThoai']"
                         solo
                         dense
                         clearable
@@ -135,34 +90,41 @@
                         hide-details="auto"
                     ></v-text-field>
                 </v-col>
-                <v-col cols="12" md="3" class="py-0">
-                    <label>Tôn giáo</label>
-                    <v-autocomplete
-                      class="flex input-form"
-                      hide-no-data
-                      :items="itemsTonGiao"
-                      v-model="tonGiaoCreate"
-                      item-text="tenMuc"
-                      item-value="maMuc"
-                      dense
-                      solo
-                      hide-details="auto"
-                      placeholder="Chọn tôn giáo"
-                      return-object
-                    >
-                    </v-autocomplete>
+                <v-col cols="6" class="py-0 mb-2">
+                    <label>Họ tên người đại diện</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="thongTinDoanhNghiep.nguoiDaiDien['hoVaTen']"
+                        solo
+                        dense
+                        clearable
+                        max
+                        hide-details="auto"
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="6" class="py-0 mb-2">
+                    <label>Số CMND/ CCCD người đại diện</label>
+                    <v-text-field
+                        class="input-form"
+                        v-model="thongTinDoanhNghiep.nguoiDaiDien['maSoCaNhan']"
+                        solo
+                        dense
+                        clearable
+                        max
+                        hide-details="auto"
+                    ></v-text-field>
                 </v-col>
                 <v-col cols="12" class="py-0 mb-2">
-                    <label>Địa chỉ thường trú</label>
+                    <label>Địa chỉ hoạt động</label>
                     <v-text-field
                       class="input-form"
-                      v-model="diaChiThuongTruCuThe"
+                      v-model="diaChiHoatDongCuThe"
                       solo
                       dense
                       clearable
                       max
                       hide-details="auto"
-                      placeholder="Số nhà, đường, phố, xóm..."
+                      placeholder="Số nhà, đường, phố ..."
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="4" class="py-0 mb-2">
@@ -204,67 +166,6 @@
                       hide-no-data
                       :items="itemsThuongTruPhuongXa"
                       v-model="thuongTruPhuongXa"
-                      item-text="tenMuc"
-                      item-value="maMuc"
-                      dense
-                      solo
-                      hide-details="auto"
-                      return-object
-                    >
-                    </v-autocomplete>
-                </v-col>
-                <v-col cols="12" class="py-0 mb-2">
-                    <label>Nơi ở hiện tại</label>
-                    <v-text-field
-                        class="input-form"
-                        v-model="noiOHienTaiCuThe"
-                        solo
-                        dense
-                        clearable
-                        max
-                        hide-details="auto"
-                        placeholder="Số nhà, đường, phố, xóm..."
-                    ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="4" class="py-0">
-                    <label>Tỉnh thành</label>
-                    <v-autocomplete
-                      class="flex input-form"
-                      hide-no-data
-                      :items="itemsTinhThanh"
-                      v-model="noiOHienTaiTinhThanh"
-                      item-text="tenMuc"
-                      item-value="maMuc"
-                      dense
-                      solo
-                      hide-details="auto"
-                      return-object
-                    >
-                    </v-autocomplete>
-                </v-col>
-                <v-col cols="12" md="4" class="py-0">
-                    <label>Quận / Huyện</label>
-                    <v-autocomplete
-                      class="flex input-form"
-                      hide-no-data
-                      :items="itemsNoiOHienTaiQuanHuyen"
-                      v-model="noiOHienTaiQuanHuyen"
-                      item-text="tenMuc"
-                      item-value="maMuc"
-                      dense
-                      solo
-                      hide-details="auto"
-                      return-object
-                    >
-                    </v-autocomplete>
-                </v-col>
-                <v-col cols="12" md="4" class="py-0">
-                    <label>Phường / Xã</label>
-                    <v-autocomplete
-                      class="flex input-form"
-                      hide-no-data
-                      :items="itemsNoiOHienTaiPhuongXa"
-                      v-model="noiOHienTaiPhuongXa"
                       item-text="tenMuc"
                       item-value="maMuc"
                       dense
@@ -329,122 +230,47 @@ export default {
         loading: false,
         validFormAdd: false,
         typeAction: "add",
-        congDanDetail: "",
-        itemsGioiTinh: [],
-        ngaySinhCreate: '',
-        gioiTinhCreate: '',
-        tonGiaoCreate: '',
-        quocTichCreate: '',
-        danTocCreate: '',
-        itemsDanToc: [],
-        itemsQuocTich: [],
-        itemsTonGiao: [],
         itemsTinhThanh: [],
-        diaChiThuongTruCuThe: '',
+        diaChiHoatDongCuThe: '',
         thuongTruTinhThanh: '',
         itemsThuongTruQuanHuyen: [],
         thuongTruQuanHuyen: '',
         itemsThuongTruPhuongXa: [],
         thuongTruPhuongXa: '',
-        noiOHienTaiTinhThanh: '',
-        itemsNoiOHienTaiQuanHuyen: [],
-        noiOHienTaiQuanHuyen: '',
-        itemsNoiOHienTaiPhuongXa: [],
-        noiOHienTaiPhuongXa: '',
-        noiOHienTaiCuThe: '',
-        thongTinCongDan: {
-          hoVaTen: "",
-          maSoCaNhan: "",
-          ngayChetMatTich: "",
-          ngaySinh: "1991-11-26T03:25:43.979Z",
-          gioiTinh: {
-            "maMuc": "",
-            "tenMuc": ""
-          },
-          noiOHienTai: {
-            "phuongXa": {
-              "maMuc": "",
-              "tenMuc": ""
-            },
-            "quanHuyen": {
-              "maMuc": "",
-              "tenMuc": ""
-            },
-            "soNhaChiTiet": "",
-            "tinhThanh": {
-              "maMuc": "",
-              "tenMuc": ""
-            }
-          },
-          diaChiThuongTru: {
-            "phuongXa": {
-              "maMuc": "",
-              "tenMuc": ""
-            },
-            "quanHuyen": {
-              "maMuc": "",
-              "tenMuc": ""
-            },
-            "soNhaChiTiet": "",
-            "tinhThanh": {
-              "maMuc": "",
-              "tenMuc": ""
-            }
-          },
-          noiSinh: {
-            "phuongXa": {
-              "maMuc": "",
-              "tenMuc": ""
-            },
-            "quanHuyen": {
-              "maMuc": "",
-              "tenMuc": ""
-            },
-            "soNhaChiTiet": "",
-            "tinhThanh": {
-              "maMuc": "",
-              "tenMuc": ""
-            }
-          },
-          queQuan: {
-            "phuongXa": {
-              "maMuc": "",
-              "tenMuc": ""
-            },
-            "quanHuyen": {
-              "maMuc": "",
-              "tenMuc": ""
-            },
-            "soNhaChiTiet": "",
-            "tinhThanh": {
-              "maMuc": "",
-              "tenMuc": ""
-            },
-          },
-          quocTich: {
-            "maMuc": "",
-            "tenMuc": ""
-          },
-          danToc: {
-            "maMuc": "",
-            "tenMuc": ""
-          },
-          tonGiao: {
-            "maMuc": "",
-            "tenMuc": "",
-            "type": ""
-          },
+        thongTinDoanhNghiep: {
           danhBaLienLac: {
             "soDienThoai": "",
             "soFax": "",
             "thuDienTu": ""
           },
-          giayToTuyThan: [],
-          tinhTrangHonNhan: {
-            "maMuc": "",
-            "tenMuc": ""
+          diaChiHoatDong: {
+            "phuongXa": {
+              "maMuc": "",
+              "tenMuc": ""
+            },
+            "quanHuyen": {
+              "maMuc": "",
+              "tenMuc": ""
+            },
+            "soNhaChiTiet": "",
+            "tinhThanh": {
+              "maMuc": "",
+              "tenMuc": ""
+            }
           },
-          tinhTrangSinhSong: {
+          maDinhDanh: "",
+          giayCapPhepKinhDoanh: [],
+          giayDangKyKinhDoanh: [],
+          maSoDoanhNghiep: "",
+          nguoiDaiDien: {
+            "hoVaTen": "",
+            "maDinhDanh": "",
+            "maSoCaNhan": ""
+          },
+          tenGoi: "",
+          tenTiengAnh: "",
+          tenVietTat: "",
+          tinhTrangToChuc: {
             "maMuc": "",
             "tenMuc": ""
           },
@@ -452,32 +278,7 @@ export default {
             "maMuc": "",
             "tenMuc": ""
           },
-          vaiTroSuDung: [
-            {
-              "maMuc": "",
-              "tenMuc": ""
-            }
-          ],
-          anhCaNhan: {
-            "chuKySo": "",
-            "dinhDang": "",
-            "duLieu": "",
-            "kichThuoc": "",
-            "ngayGioSua": "",
-            "ngayGioTao": "",
-            "ngayKySo": "",
-            "tenTep": ""
-          },
-          nguoiTaoLap: {
-            "maSoID": "",
-            "tenDinhDanh": ""
-          },
-          nhaCungCapDinhDanh: {
-            "maPhamVi": "",
-            "maSoDinhDanh": "",
-            "tenNhaCungCap": "",
-            "tinhTrang": ""
-          }
+          vaiTroSuDung: []
         },
         required: [
           v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc'
@@ -486,9 +287,8 @@ export default {
     },
     created () {
       let vm = this
-      vm.$store.commit('SET_INDEXTAB', 1)
+      vm.$store.commit('SET_INDEXTAB', 2)
       vm.getDanhMucTinhThanh()
-      vm.getDanhMuc()
       if (vm.id != 0) {
         vm.typeAction = 'update'
         vm.getThongTinCongDan()
@@ -499,9 +299,8 @@ export default {
     watch: {
       '$route': function (newRoute, oldRoute) {
         let vm = this
-        vm.$store.commit('SET_INDEXTAB', 1)
+        vm.$store.commit('SET_INDEXTAB', 2)
         vm.getDanhMucTinhThanh()
-        vm.getDanhMuc()
         if (vm.id != 0) {
           vm.typeAction = 'update'
           vm.getThongTinCongDan()
@@ -511,39 +310,31 @@ export default {
       },
       thuongTruTinhThanh () {
         let vm = this
-        vm.changeTinhThanh('thuongtru')
+        vm.changeTinhThanh()
       },
       thuongTruQuanHuyen () {
         let vm = this
-        vm.changeQuanHuyen('thuongtru')
-      },
-      noiOHienTaiTinhThanh () {
-        let vm = this
-        vm.changeTinhThanh('noiohientai')
-      },
-      noiOHienTaiQuanHuyen () {
-        let vm = this
-        vm.changeQuanHuyen('noiohientai')
+        vm.changeQuanHuyen()
       }
     },
     methods: {
       getThongTinCongDan () {
         let vm = this
         let filter = {
-          collectionName: 'canhan',
+          collectionName: 'donvikinhdoanh',
           id: vm.id
         }
         vm.$store.dispatch('collectionDetail', filter).then(function (response) {
           let data = response.resp
           if (data) {
-            for (let key in vm.thongTinCongDan) {
+            for (let key in vm.thongTinDoanhNghiep) {
               if (data.hasOwnProperty(key)) {
-                vm.thongTinCongDan[key] = data[key]
+                vm.thongTinDoanhNghiep[key] = data[key]
               }
             }
           }
           vm.formatInputData()
-          console.log('dataCongDan', vm.thongTinCongDan)
+          console.log('dataCongDan', vm.thongTinDoanhNghiep)
         }).catch(function () {
           vm.loadingData = false
         })
@@ -557,8 +348,8 @@ export default {
         vm.loading = true
         if (vm.$refs.formAddCaNhan.validate()) {
           let filter = {
-            collectionName: 'canhan',
-            data: vm.thongTinCongDan
+            collectionName: 'donvikinhdoanh',
+            data: vm.thongTinDoanhNghiep
           }
           vm.$store.dispatch('collectionCreate', filter).then(function (result) {
             vm.loading = false
@@ -568,10 +359,6 @@ export default {
           }).catch(function (response) {
             vm.loading = false
             toastr.remove()
-            // if (response && response.status == 409) {
-            //   toastr.error('Mã danh mục đã tồn tại')
-            //   return
-            // }
             toastr.error('Thêm mới thất bại')
           })
         } else {
@@ -587,9 +374,9 @@ export default {
         vm.loading = true
         if (vm.$refs.formAddCaNhan.validate()) {
           let filter = {
-            collectionName: 'canhan',
+            collectionName: 'donvikinhdoanh',
             id: vm.id,
-            data: vm.thongTinCongDan
+            data: vm.thongTinDoanhNghiep
           }
           vm.$store.dispatch('collectionUpdate', filter).then(function (result) {
             vm.loading = false
@@ -693,13 +480,7 @@ export default {
       },
       changeTinhThanh (type) {
         let vm = this
-        let danhMucCha = ''
-        if (type === 'thuongtru') {
-          danhMucCha = vm.thuongTruTinhThanh['maMuc']
-        }
-        if (type === 'noiohientai') {
-          danhMucCha = vm.noiOHienTaiTinhThanh['maMuc']
-        }
+        let danhMucCha = vm.thuongTruTinhThanh['maMuc']
         let filter = {
           collectionName: 'quanhuyen',
           data: {
@@ -714,24 +495,13 @@ export default {
         }
         
         vm.$store.dispatch('collectionFilter', filter).then(function (response) {
-          if (type === 'thuongtru') {
-            vm.itemsThuongTruQuanHuyen = response.content
-          }
-          if (type === 'noiohientai') {
-            vm.itemsNoiOHienTaiQuanHuyen = response.content
-          }
+          vm.itemsThuongTruQuanHuyen = response.content
         }).catch(function () {
         })
       },
       changeQuanHuyen (type) {
         let vm = this
-        let danhMucCha = ''
-        if (type === 'thuongtru') {
-          danhMucCha = vm.thuongTruQuanHuyen['maMuc']
-        }
-        if (type === 'noiohientai') {
-          danhMucCha = vm.noiOHienTaiQuanHuyen['maMuc']
-        }
+        let danhMucCha =  vm.thuongTruQuanHuyen['maMuc']
         let filter = {
           collectionName: 'phuongxa',
           data: {
@@ -745,19 +515,13 @@ export default {
           }
         }
         vm.$store.dispatch('collectionFilter', filter).then(function (response) {
-          if (type === 'thuongtru') {
             vm.itemsThuongTruPhuongXa = response.content
-          }
-          if (type === 'noiohientai') {
-            vm.itemsNoiOHienTaiPhuongXa = response.content
-          }
         }).catch(function () {
         })
       },
       formatOutputData () {
         let vm = this
-        vm.thongTinCongDan.ngaySinh = vm.convertDate(vm.ngaySinhCreate)
-        vm.thongTinCongDan.diaChiThuongTru = {
+        vm.thongTinDoanhNghiep.diaChiHoatDong = {
           "phuongXa": {
             "maMuc": vm.thuongTruPhuongXa.maMuc,
             "tenMuc": vm.thuongTruPhuongXa.tenMuc
@@ -770,56 +534,16 @@ export default {
             "maMuc": vm.thuongTruTinhThanh.maMuc,
             "tenMuc": vm.thuongTruTinhThanh.tenMuc
           },
-          "soNhaChiTiet": vm.diaChiThuongTruCuThe
+          "soNhaChiTiet": vm.diaChiHoatDongCuThe
         }
-        vm.thongTinCongDan.noiOHienTai = {
-          "phuongXa": {
-            "maMuc": vm.noiOHienTaiPhuongXa.maMuc,
-            "tenMuc": vm.noiOHienTaiPhuongXa.tenMuc
-          },
-          "quanHuyen": {
-            "maMuc": vm.noiOHienTaiQuanHuyen.maMuc,
-            "tenMuc": vm.noiOHienTaiQuanHuyen.tenMuc
-          },
-          "tinhThanh": {
-            "maMuc": vm.noiOHienTaiTinhThanh.maMuc,
-            "tenMuc": vm.noiOHienTaiTinhThanh.tenMuc
-          },
-          "soNhaChiTiet": vm.noiOHienTaiCuThe
-        }
-        vm.thongTinCongDan.gioiTinh = {
-          "maMuc": vm.gioiTinhCreate.maMuc,
-          "tenMuc": vm.gioiTinhCreate.tenMuc
-        }
-        vm.thongTinCongDan.quocTich = {
-          "maMuc": vm.quocTichCreate.maMuc,
-          "tenMuc": vm.quocTichCreate.tenMuc
-        }
-        vm.thongTinCongDan.danToc = {
-          "maMuc": vm.danTocCreate.maMuc,
-          "tenMuc": vm.danTocCreate.tenMuc
-        }
-        vm.thongTinCongDan.tonGiao = {
-          "maMuc": vm.tonGiaoCreate.maMuc,
-          "tenMuc": vm.tonGiaoCreate.tenMuc
-        }
-        console.log('thongTinCongDanOutput', vm.thongTinCongDan)
+        console.log('thongTinCongDanOutput', vm.thongTinDoanhNghiep)
       },
       formatInputData () {
         let vm = this
-        vm.ngaySinhCreate = vm.dateLocale(vm.thongTinCongDan.ngaySinh)
-        vm.gioiTinhCreate = vm.thongTinCongDan.gioiTinh
-        vm.tonGiaoCreate = vm.thongTinCongDan.tonGiao
-        vm.quocTichCreate = vm.thongTinCongDan.quocTich
-        vm.danTocCreate = vm.thongTinCongDan.danToc
-        vm.diaChiThuongTruCuThe = vm.thongTinCongDan.diaChiThuongTru.soNhaChiTiet
-        vm.thuongTruTinhThanh = vm.thongTinCongDan.diaChiThuongTru.tinhThanh
-        vm.thuongTruQuanHuyen = vm.thongTinCongDan.diaChiThuongTru.quanHuyen
-        vm.thuongTruPhuongXa = vm.thongTinCongDan.diaChiThuongTru.phuongXa
-        vm.noiOHienTaiTinhThanh = vm.thongTinCongDan.noiOHienTai.tinhThanh
-        vm.noiOHienTaiQuanHuyen = vm.thongTinCongDan.noiOHienTai.quanHuyen
-        vm.noiOHienTaiPhuongXa = vm.thongTinCongDan.noiOHienTai.phuongXa
-        vm.noiOHienTaiCuThe = vm.thongTinCongDan.noiOHienTai.soNhaChiTiet
+        vm.diaChiHoatDongCuThe = vm.thongTinDoanhNghiep.diaChiHoatDong.soNhaChiTiet
+        vm.thuongTruTinhThanh = vm.thongTinDoanhNghiep.diaChiHoatDong.tinhThanh
+        vm.thuongTruQuanHuyen = vm.thongTinDoanhNghiep.diaChiHoatDong.quanHuyen
+        vm.thuongTruPhuongXa = vm.thongTinDoanhNghiep.diaChiHoatDong.phuongXa
       },
       formatBirthDate () {
         let vm = this

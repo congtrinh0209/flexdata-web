@@ -20,6 +20,15 @@
           </li>
         </ul>
       </nav>
+      <v-btn small class="my-0 white--text mr-3" color="#940404"
+        @click="submitLogout"
+        style="position: absolute;top:7px;right:0px"
+      >
+        <div class="v-btn__content">
+          <v-icon size="18">mdi-logout-variant</v-icon>&nbsp;
+          <span>Đăng xuất</span>
+        </div>
+      </v-btn>
     </div>
   </div>
 </template>
@@ -50,14 +59,14 @@
           title: 'Công dân',
           class: 'congdan-tab',
           id: 'congdan-tab-id',
-          to: '/tai-khoan/cong-dan'
+          to: '/cong-dan'
         },
         {
           icon: '',
           title: 'Tổ chức doanh nghiệp',
           class: 'doanhnghiep-tab',
           id: 'doanhnghiep-tab-id',
-          to: '/tai-khoan/doanh-nghiep'
+          to: '/doanh-nghiep'
         },
       ]
     }),
@@ -78,6 +87,14 @@
       redirectTo (item, index) {
         this.$store.commit('SET_INDEXTAB', index)
         this.$router.push({ path: item.to })
+      },
+      submitLogout () {
+        let vm = this
+        vm.$store.commit('SET_ISSIGNED', false)
+        localStorage.setItem('user', null)
+        vm.$cookies.set('Token', '')
+        vm.$cookies.set('RefreshToken', '')
+        window.location.href = window.location.origin + window.location.pathname + "#/login"
       },
     },
   }
@@ -118,6 +135,9 @@
     line-height: 28px;
     color: #FFFFFF;
     text-transform: uppercase;
+  }
+  #header-nav {
+    position: relative;
   }
   #header-nav #navigation {
     height: 41px;
