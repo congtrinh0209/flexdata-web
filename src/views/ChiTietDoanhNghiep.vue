@@ -98,29 +98,118 @@
                             </v-flex>
                             <v-flex xs5>Trạng thái:</v-flex>
                             <v-flex xs7>
-                                <span class="font-weight-bold">Đang hoạt động</span>
+                              <span class="font-weight-bold">
+                                {{thongTinCongDan && thongTinCongDan['danhTinhDienTu'] && thongTinCongDan['danhTinhDienTu']['tinhTrangSuDungTaiKhoan']['tenMuc'] ? thongTinCongDan['danhTinhDienTu']['tinhTrangSuDungTaiKhoan']['tenMuc'] : 'Chưa tạo tài khoản'}}
+                              </span>
                             </v-flex>
                         </v-layout>
-                        <div class="d-flex justify-space-between w-full pa-4 ">
-                            <v-btn color="primary" small class="mt-3 mx-3 text-white">
+                        <div class="d-flex justify-space-between w-full pa-4 pb-2" v-if="thongTinCongDan && thongTinCongDan['danhTinhDienTu']">
+                            <v-btn v-if="thongTinCongDan['danhTinhDienTu']['tinhTrangSuDungTaiKhoan']['maMuc'] != 4 && thongTinCongDan['danhTinhDienTu']['tinhTrangSuDungTaiKhoan']['maMuc']" color="primary" small class="mt-3 mx-3 text-white">
                                 Đổi mật khẩu
                             </v-btn>
-                            <v-btn color="primary" small class="mt-3 mx-3 text-white">
+                            <v-btn color="primary" v-if="!thongTinCongDan['danhTinhDienTu']['tinhTrangSuDungTaiKhoan']['maMuc']" small class="mt-3 mx-3 text-white" @click="showCreateAcc()">
+                                Tạo tài khoản
+                            </v-btn>
+                            <v-btn v-if="thongTinCongDan['danhTinhDienTu']['tinhTrangSuDungTaiKhoan']['maMuc'] == 1" color="primary" small class="mt-3 mx-3 text-white" @click="activeAccount()">
+                                Kích hoạt tài khoản
+                            </v-btn>
+                            <v-btn v-if="thongTinCongDan['danhTinhDienTu']['tinhTrangSuDungTaiKhoan']['maMuc'] == 2" color="primary" small class="mt-3 mx-3 text-white" @click="blockAccount()">
                                 Khóa tài khoản
                             </v-btn>
-                            <v-btn color="primary" small class="mt-3 mx-3 text-white">
-                                In phiếu
+                            <v-btn v-if="thongTinCongDan['danhTinhDienTu']['tinhTrangSuDungTaiKhoan']['maMuc'] == 3" color="primary" small class="mt-3 mx-3 text-white" @click="unBlockAccount()">
+                                Mở khóa tài khoản
                             </v-btn>
+                            <!-- <v-btn color="primary" small class="mt-3 mx-3 text-white">
+                                In phiếu
+                            </v-btn> -->
+                        </div>
+                        <div class="d-flex justify-space-between w-full pb-4 " v-if="thongTinCongDan && thongTinCongDan['danhTinhDienTu']">
+                          <v-btn color="primary" v-if="thongTinCongDan['danhTinhDienTu']['tinhTrangSuDungTaiKhoan']['maMuc'] == 3" small class="mt-3 mx-3 text-white" @click="deleteAccount()">
+                            Xóa tài khoản
+                          </v-btn>
                         </div>
                     </div>
                 </v-card>
             </v-col>
         </v-row>
+        <v-dialog
+          max-width="450"
+          v-model="dialogCreateAcc"
+          persistent
+        >
+          <v-card>
+            <v-toolbar
+              dark
+              color="primary"
+            >
+              <v-toolbar-title >Tạo tài khoản</v-toolbar-title>
+              <v-spacer></v-spacer>
+              <v-toolbar-items>
+                <v-btn
+                  icon
+                  dark
+                  @click="dialogCreateAcc = false"
+                >
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+              </v-toolbar-items>
+            </v-toolbar>
+            <v-card-text class="mt-5">
+              <v-form
+                ref="formCreateAcc"
+                v-model="validFormAdd"
+                lazy-validation
+              >
+                  <v-layout wrap>
+                    <v-flex xs12 class="mb-2">
+                      <div class="text-label mb-2">
+                        <span>Mật khẩu tài khoản</span>
+                        <span class="red--text"> (*)</span>
+                      </div>
+                      <v-text-field
+                        class="input-form"
+                        v-model="passwordCreate"
+                        solo
+                        dense
+                        :rules="required"
+                        required
+                        hide-details="auto"
+                      ></v-text-field>
+                    </v-flex>
+                  </v-layout>
+              </v-form>
+            </v-card-text>
+            <v-card-actions class="justify-end">
+              <v-btn color="red" class="white--text mr-2" :loading="loadingAction" :disabled="loadingAction" @click="dialogCreateAcc = false">
+                <v-icon left>
+                  mdi-close
+                </v-icon>
+                Thoát
+              </v-btn>
+              <v-btn class="mr-2" color="primary" :loading="loadingAction" :disabled="loadingAction" @click.native="createAccount">
+                <v-icon left>
+                  mdi-content-save
+                </v-icon>
+                <span>Tạo tài khoản</span>
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
     </div>
 </template>
 
 <script>
+import Vue from 'vue'
 import Pagination from './Pagination.vue'
+import toastr from 'toastr'
+toastr.options = {
+  'closeButton': true,
+  'timeOut': '5000',
+  "positionClass": "toast-top-center"
+}
+import VueConfirmDialog from 'vue-confirm-dialog'
+Vue.use(VueConfirmDialog)
+Vue.component('vue-confirm-dialog', VueConfirmDialog.default)
 export default {
     props: ["id"],
     components: {
@@ -131,6 +220,7 @@ export default {
             publicPath: process.env.VUE_APP_PULIC_PATH,
             selected: [],
             loadingData: false,
+            loadingAction: false,
             headers: [
                 {
                     sortable: false,
@@ -229,7 +319,13 @@ export default {
                 }
             
             ],
-            thongTinCongDan: ''
+            thongTinCongDan: '',
+            validFormAdd: true,
+            dialogCreateAcc: false,
+            passwordCreate: '',
+            required: [
+            v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc'
+            ],
         }
     },
     created () {
@@ -262,6 +358,135 @@ export default {
           vm.thongTinCongDan = response.resp
         }).catch(function () {
           vm.loadingData = false
+        })
+      },
+      showCreateAcc () {
+        let vm = this
+        vm.passwordCreate = ''
+        vm.dialogCreateAcc = true
+      },
+      createAccount () {
+        let vm = this
+        if (vm.$refs.formCreateAcc.validate()) {
+          let filter = {
+            data: {
+              "maSoDinhDanh": vm.thongTinCongDan.maDinhDanh,
+              "password": vm.passwordCreate,
+              "provider": "keycloak",
+              "type": "donvikinhdoanh"
+            }
+          }
+          vm.loadingAction = true
+          vm.$store.dispatch('createAccountCaNhan', filter).then(function (response) {
+            vm.loadingAction = false
+            vm.dialogCreateAcc = false
+            toastr.remove()
+            toastr.success('Tạo tài khoản thành công')
+            vm.getThongTinCongDan()
+          }).catch(function () {
+            vm.loadingAction = false
+            toastr.remove()
+            toastr.error('Tạo tài khoản không thành công')
+          })
+        }
+      },
+      activeAccount () {
+        let vm = this
+        let filter = {
+          data: {
+            "maSoDinhDanh": vm.thongTinCongDan.maDinhDanh,
+            "provider": "keycloak",
+            "type": "donvikinhdoanh"
+          }
+        }
+        vm.loadingAction = true
+        vm.$store.dispatch('activeCaNhan', filter).then(function (response) {
+          vm.loadingAction = false
+          vm.dialogCreateAcc = false
+          toastr.remove()
+          toastr.success('Kích hoạt tài khoản thành công')
+          vm.getThongTinCongDan()
+        }).catch(function () {
+          vm.loadingAction = false
+          toastr.remove()
+          toastr.error('Kích hoạt tài khoản không thành công')
+        })
+      },
+      blockAccount () {
+        let vm = this
+        let filter = {
+          data: {
+            "maSoDinhDanh": vm.thongTinCongDan.maDinhDanh,
+            "provider": "keycloak",
+            "type": "donvikinhdoanh"
+          }
+        }
+        vm.loadingAction = true
+        vm.$store.dispatch('blockCaNhan', filter).then(function (response) {
+          vm.loadingAction = false
+          vm.dialogCreateAcc = false
+          toastr.remove()
+          toastr.success('Khóa tài khoản thành công')
+          vm.getThongTinCongDan()
+        }).catch(function () {
+          vm.loadingAction = false
+          toastr.remove()
+          toastr.error('Khóa tài khoản không thành công')
+        })
+      },
+      unBlockAccount () {
+        let vm = this
+        let filter = {
+          data: {
+            "maSoDinhDanh": vm.thongTinCongDan.maDinhDanh,
+            "provider": "keycloak",
+            "type": "donvikinhdoanh"
+          }
+        }
+        vm.loadingAction = true
+        vm.$store.dispatch('unBlockCaNhan', filter).then(function (response) {
+          vm.loadingAction = false
+          toastr.remove()
+          toastr.success('Mở khóa tài khoản thành công')
+          vm.getThongTinCongDan()
+        }).catch(function () {
+          vm.loadingAction = false
+          toastr.remove()
+          toastr.error('Mở khóa tài khoản không thành công')
+        })
+      },
+      deleteAccount () {
+        let vm = this
+        vm.$confirm({
+          title: 'Xác nhận xóa dữ liệu',
+          message: 'Bạn có chắc chắn xóa tài khoản này?',
+          button: {
+            yes: 'Có',
+            no: 'Không'
+          },
+          callback: confirm => {
+            if (confirm == true) {
+              let filter = {
+                data: {
+                  "maSoDinhDanh": vm.thongTinCongDan.maDinhDanh,
+                  "provider": "keycloak",
+                  "type": "donvikinhdoanh"
+                }
+              }
+              vm.loadingAction = true
+              vm.$store.dispatch('deleteCaNhan', filter).then(function (response) {
+                vm.loadingAction = false
+                vm.dialogCreateAcc = false
+                toastr.remove()
+                toastr.success('Xóa tài khoản thành công')
+                vm.getThongTinCongDan()
+              }).catch(function () {
+                vm.loadingAction = false
+                toastr.remove()
+                toastr.error('Xóa tài khoản không thành công')
+              })
+            }
+          }
         })
       },
       dateLocale (dateInput) {

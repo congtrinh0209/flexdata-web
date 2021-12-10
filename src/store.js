@@ -141,6 +141,23 @@ export default new Vuex.Store({
         })
       })
     },
+    logoutKeyCloak ({commit, state}, filter) {
+      return new Promise((resolve, reject) => {
+        let settings = {
+          "url": state.apiSso + '/flex/oauth2/logout_endpoint',
+          "method": "GET",
+          "headers": {
+            'Content-Type': 'application/json'
+          },
+        };
+        
+        $.ajax(settings).done(function (response) {
+          resolve(response)
+        }).fail(function (response) {
+          reject(response)
+        })
+      })
+    },
     getTokenKeyCloak ({commit, state}, filter) {
       return new Promise((resolve, reject) => {
         let settings = {
@@ -169,7 +186,7 @@ export default new Vuex.Store({
     getRefreshTokenKeyCloak ({commit, state}, filter) {
       return new Promise((resolve, reject) => {
         let settings = {
-          "url": state.apiSso + '/flex/oauth2/refresh_token',
+          "url": state.apiSso + '/flex/oauth2/refreshtoken',
           "method": "POST",
           "headers": {
             'Authorization': 'Basic ZmxleDpzc28=',
@@ -178,7 +195,7 @@ export default new Vuex.Store({
             'Content-Type': 'application/x-www-form-urlencoded'
           },
           "data": {
-            "code": filter.code,
+            "refresh_token": filter.code,
             "redirect_uri": filter.redirect_uri
           }
         };
@@ -188,6 +205,106 @@ export default new Vuex.Store({
           resolve(serializable)
         }).fail(function (response) {
           reject(response)
+        })
+      })
+    },
+    createAccountCaNhan ({commit, state}, filter) {
+      return new Promise((resolve, reject) => {
+        let dataPost = JSON.stringify(filter.data)
+        let config = {
+          method: 'post',
+          url: '/v1/datasharing/danhtinhdientu/' + filter.data.type,
+          headers: { 
+            'Accept': 'application/json', 
+            'Content-Type': 'application/json'
+          },
+          data : dataPost
+        }
+        axios(config).then(function (response) {
+          let serializable = response.data
+          resolve(serializable)
+        }).catch(function (error) {
+          reject(error.response)
+        })
+      })
+    },
+    activeCaNhan ({commit, state}, filter) {
+      return new Promise((resolve, reject) => {
+        let dataPost = JSON.stringify(filter.data)
+        let config = {
+          method: 'post',
+          url: '/v1/datasharing/danhtinhdientu/'+ filter.data.type + '/active',
+          headers: { 
+            'Accept': 'application/json', 
+            'Content-Type': 'application/json'
+          },
+          data : dataPost
+        }
+        axios(config).then(function (response) {
+          let serializable = response.data
+          resolve(serializable)
+        }).catch(function (error) {
+          reject(error.response)
+        })
+      })
+    },
+    blockCaNhan ({commit, state}, filter) {
+      return new Promise((resolve, reject) => {
+        let dataPost = JSON.stringify(filter.data)
+        let config = {
+          method: 'post',
+          url: '/v1/datasharing/danhtinhdientu/' + filter.data.type + '/lock',
+          headers: { 
+            'Accept': 'application/json', 
+            'Content-Type': 'application/json'
+          },
+          data : dataPost
+        }
+        axios(config).then(function (response) {
+          let serializable = response.data
+          resolve(serializable)
+        }).catch(function (error) {
+          reject(error.response)
+        })
+      })
+    },
+    unBlockCaNhan ({commit, state}, filter) {
+      return new Promise((resolve, reject) => {
+        let dataPost = JSON.stringify(filter.data)
+        let config = {
+          method: 'post',
+          url: '/v1/datasharing/danhtinhdientu/' + filter.data.type + '/unlock',
+          headers: { 
+            'Accept': 'application/json', 
+            'Content-Type': 'application/json'
+          },
+          data : dataPost
+        }
+        axios(config).then(function (response) {
+          let serializable = response.data
+          resolve(serializable)
+        }).catch(function (error) {
+          reject(error.response)
+        })
+      })
+    },
+    deleteCaNhan ({commit, state}, filter) {
+      return new Promise((resolve, reject) => {
+        let dataPost = JSON.stringify(filter.data)
+        let config = {
+          method: 'delete',
+          url: '/v1/datasharing/danhtinhdientu/' + filter.data.type + '/delete',
+          headers: { 
+            'Accept': 'application/json', 
+            'Content-Type': 'application/json'
+          },
+          data : dataPost
+        }
+        axios(config).then(function (response) {
+          let serializable = response.data
+          resolve(serializable)
+        }).catch(function (error) {
+          reject(error.response)
         })
       })
     },
