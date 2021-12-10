@@ -94,7 +94,13 @@
         localStorage.setItem('user', null)
         vm.$cookies.set('Token', '')
         vm.$cookies.set('RefreshToken', '')
-        window.location.href = window.location.origin + window.location.pathname + "#/login"
+        vm.$store.dispatch('logoutKeyCloak').then(function (result) {
+          let redirect_uri = process.env.VUE_APP_PATH_REDIRECT_SSO
+          window.location.href = result.endpoint + '?redirect_uri='+ redirect_uri
+        }).catch(function () {
+          window.location.href = window.location.origin + window.location.pathname + "#/login"
+        })
+        
       },
     },
   }

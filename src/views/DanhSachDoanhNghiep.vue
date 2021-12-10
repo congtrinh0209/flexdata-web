@@ -131,9 +131,9 @@
                               <v-icon size="16">mdi-email-fast-outline</v-icon>&nbsp; {{ item.danhBaLienLac['thuDienTu'] }}
                           </div>
                         </template>
-                        <template v-slot:item.status="{ item }">
-                            <div>
-                              {{ getStatus(item.status) }}
+                        <template v-slot:item.danhTinhDienTu="{ item }">
+                            <div :style="getColor(item.danhTinhDienTu)">
+                              {{ getStatus(item.danhTinhDienTu) }}
                             </div>
                         </template>
                         <template v-slot:item.action="{ item }">
@@ -197,7 +197,7 @@ export default {
                 sortable: false,
                 text: 'Tình trạng',
                 align: 'left',
-                value: 'status'
+                value: 'danhTinhDienTu'
             },
             {
                 sortable: false,
@@ -283,14 +283,22 @@ export default {
         }).catch(function () {
         })
       },
-      getStatus(status) {
+      getStatus(danhTinhDienTu) {
+        return danhTinhDienTu.tinhTrangSuDungTaiKhoan['tenMuc'] ? danhTinhDienTu.tinhTrangSuDungTaiKhoan['tenMuc'] : 'Chưa tạo tài khoản'
+      },
+      getColor (danhTinhDienTu) {
+        let status = String(danhTinhDienTu.tinhTrangSuDungTaiKhoan['maMuc'])
         switch(status) {
-          case 1:
-              return 'Hoạt động'
-          case 0:
-              return 'Đã khóa'
+          case '1':
+              return 'color: blue'
+          case '2':
+              return 'color: green'
+          case '3':
+            return 'color: orange'
+          case '4':
+            return 'color: red'
           default:
-              return ''
+            return 'color: black'
         }
       },
       dateLocale (dateInput) {
