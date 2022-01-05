@@ -147,7 +147,7 @@
                             </div>
                         </template>
                     </v-data-table>
-                    <pagination v-if="pageCount" :pageInput="page" :pageCount="pageCount"></pagination>
+                    <pagination v-if="pageCount" :pageInput="page" :pageCount="pageCount" @tiny:change-page="changePage"></pagination>
                 </v-card>
             </v-col>
         </v-row>
@@ -284,10 +284,10 @@ export default {
         })
       },
       getStatus(danhTinhDienTu) {
-        return danhTinhDienTu.tinhTrangSuDungTaiKhoan['tenMuc'] ? danhTinhDienTu.tinhTrangSuDungTaiKhoan['tenMuc'] : 'Chưa tạo tài khoản'
+        return danhTinhDienTu[0] ? danhTinhDienTu[0].tinhTrangSuDungTaiKhoan['tenMuc'] : 'Chưa tạo tài khoản'
       },
       getColor (danhTinhDienTu) {
-        let status = String(danhTinhDienTu.tinhTrangSuDungTaiKhoan['maMuc'])
+        let status = danhTinhDienTu[0] ? String(danhTinhDienTu[0].tinhTrangSuDungTaiKhoan['maMuc']) : '0'
         switch(status) {
           case '1':
               return 'color: blue'
@@ -304,7 +304,12 @@ export default {
       dateLocale (dateInput) {
         let date = new Date(dateInput)
         return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`
-      }
+      },
+      changePage (config) {
+        let vm = this
+        vm.page = config.page - 1
+        vm.getDanhMuc()
+      },
     }
 }
 </script>

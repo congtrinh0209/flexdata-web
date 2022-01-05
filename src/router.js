@@ -53,12 +53,17 @@ export default new Router({
           component: () => import('@/views/EditDoanhNghiep'),
           props: true
         },
+        {
+          name: 'KichHoatTaiKhoan',
+          path: '/kich-hoat-tai-khoan',
+          component: () => import('@/views/KichHoatTaiKhoan')
+        }
       ],
     },
     {
       name: 'Login',
       path: '/login',
       component: () => import('@/views/Login')
-    },
+    }
   ]
 })

@@ -39,7 +39,7 @@
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6" class="py-0 mb-2">
-                    <label>Tên viết tắt <span class="red--text">(*)</span></label>
+                    <label>Tên viết tắt</label>
                     <v-text-field
                       class="input-form"
                       v-model="thongTinDoanhNghiep.tenVietTat"
@@ -48,12 +48,10 @@
                       clearable
                       max
                       hide-details="auto"
-                      :rules="required"
-                      required
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6" class="py-0 mb-2">
-                    <label>Tên tiếng anh <span class="red--text">(*)</span></label>
+                    <label>Tên tiếng anh</label>
                     <v-text-field
                       class="input-form"
                       v-model="thongTinDoanhNghiep.tenTiengAnh"
@@ -62,8 +60,6 @@
                       clearable
                       max
                       hide-details="auto"
-                      :rules="required"
-                      required
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6" class="py-0 mb-2">

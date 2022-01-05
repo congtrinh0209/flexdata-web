@@ -516,7 +516,9 @@
             }
             if (vm.itemSelect.collectionName === 'phuongxa') {
               vm.itemsQuanHuyen = vm.itemsQuanHuyenSearch
-              vm.danhMucChaQuanHuyen = vm.tinhThanhSearch
+              vm.danhMucChaQuanHuyen = vm.itemsTinhThanh.find(function (item) {
+                return item.maMuc == vm.tinhThanhSearch
+              })
               vm.danhMucChaPhuongXa = item.thamChieu
             }
             try {
@@ -532,7 +534,9 @@
             // vm.danhMucChaQuanHuyen = vm.itemsTinhThanh.find(function (item) {
             //   return item.maMuc === vm.tinhThanhDefault
             // })
-            vm.danhMucChaQuanHuyen = vm.tinhThanhSearch
+            vm.danhMucChaQuanHuyen = vm.itemsTinhThanh.find(function (item) {
+              return item.maMuc == vm.tinhThanhSearch
+            })
             vm.danhMucChaPhuongXa = ''
             vm.statusCreate = '1'
             if (vm.itemSelect.collectionName === 'phuongxa') {
@@ -624,6 +628,20 @@
             type: ''
           },
           ghiChu: vm.ghiChu
+        }
+        if (vm.itemSelect.collectionName === 'quanhuyen') {
+          vm.dataAction.thamChieu = {
+            maMuc: vm.danhMucChaQuanHuyen.maMuc,
+            tenMuc: vm.danhMucChaQuanHuyen.tenMuc,
+            type: vm.danhMucChaQuanHuyen.type
+          }
+        }
+        if (vm.itemSelect.collectionName === 'phuongxa') {
+          vm.dataAction.thamChieu = {
+            maMuc: vm.danhMucChaPhuongXa.maMuc,
+            tenMuc: vm.danhMucChaPhuongXa.tenMuc,
+            type: vm.danhMucChaPhuongXa.type
+          }
         }
         if (vm.loading) {
           return
