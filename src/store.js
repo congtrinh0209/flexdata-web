@@ -213,7 +213,27 @@ export default new Vuex.Store({
         let dataPost = JSON.stringify(filter.data)
         let config = {
           method: 'post',
-          url: '/v1/datasharing/danhtinhdientu/' + filter.data.type,
+          url: '/v1/datasharing/idp/account/' + filter.data.type,
+          headers: { 
+            'Accept': 'application/json', 
+            'Content-Type': 'application/json'
+          },
+          data : dataPost
+        }
+        axios(config).then(function (response) {
+          let serializable = response.data
+          resolve(serializable)
+        }).catch(function (error) {
+          reject(error.response)
+        })
+      })
+    },
+    changePass ({commit, state}, filter) {
+      return new Promise((resolve, reject) => {
+        let dataPost = JSON.stringify(filter.data)
+        let config = {
+          method: 'post',
+          url: '/v1/datasharing/idp/account/resetpwd',
           headers: { 
             'Accept': 'application/json', 
             'Content-Type': 'application/json'
@@ -233,7 +253,7 @@ export default new Vuex.Store({
         let dataPost = JSON.stringify(filter.data)
         let config = {
           method: 'post',
-          url: '/v1/datasharing/danhtinhdientu/'+ filter.data.type + '/active',
+          url: '/v1/datasharing/idp/account/'+ filter.data.type + '/active',
           headers: { 
             'Accept': 'application/json', 
             'Content-Type': 'application/json'
@@ -253,7 +273,7 @@ export default new Vuex.Store({
         let dataPost = JSON.stringify(filter.data)
         let config = {
           method: 'post',
-          url: '/v1/datasharing/danhtinhdientu/' + filter.data.type + '/lock',
+          url: '/v1/datasharing/idp/account/' + filter.data.type + '/lock',
           headers: { 
             'Accept': 'application/json', 
             'Content-Type': 'application/json'
@@ -273,7 +293,7 @@ export default new Vuex.Store({
         let dataPost = JSON.stringify(filter.data)
         let config = {
           method: 'post',
-          url: '/v1/datasharing/danhtinhdientu/' + filter.data.type + '/unlock',
+          url: '/v1/datasharing/idp/account/' + filter.data.type + '/unlock',
           headers: { 
             'Accept': 'application/json', 
             'Content-Type': 'application/json'
@@ -293,7 +313,7 @@ export default new Vuex.Store({
         let dataPost = JSON.stringify(filter.data)
         let config = {
           method: 'delete',
-          url: '/v1/datasharing/danhtinhdientu/' + filter.data.type + '/delete',
+          url: '/v1/datasharing/idp/account/' + filter.data.type + '/delete',
           headers: { 
             'Accept': 'application/json', 
             'Content-Type': 'application/json'

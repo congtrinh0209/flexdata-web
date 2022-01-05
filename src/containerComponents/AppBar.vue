@@ -20,7 +20,7 @@
           </li>
         </ul>
       </nav>
-      <v-btn small class="my-0 white--text mr-3" color="#940404"
+      <v-btn small class="btn-login my-0 white--text mr-3" color="#940404"
         @click="submitLogout"
         style="position: absolute;top:7px;right:0px"
       >

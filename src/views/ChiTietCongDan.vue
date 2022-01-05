@@ -1,5 +1,6 @@
 <template>
     <div>
+      <vue-confirm-dialog></vue-confirm-dialog>
         <v-row>
             <v-col cols="12" md="8">
                 <div class="d-flex justify-space-between mb-4">
@@ -97,32 +98,33 @@
                             <v-flex xs5>Trạng thái:</v-flex>
                             <v-flex xs7>
                               <span class="font-weight-bold">
-                                {{thongTinCongDan && thongTinCongDan['danhTinhDienTu'] && thongTinCongDan['danhTinhDienTu']['tinhTrangSuDungTaiKhoan']['tenMuc'] ? thongTinCongDan['danhTinhDienTu']['tinhTrangSuDungTaiKhoan']['tenMuc'] : 'Chưa tạo tài khoản'}}
+                                {{thongTinCongDan && thongTinCongDan['danhTinhDienTu'][0] && thongTinCongDan['danhTinhDienTu'][0]['tinhTrangSuDungTaiKhoan']['tenMuc'] ? thongTinCongDan['danhTinhDienTu'][0]['tinhTrangSuDungTaiKhoan']['tenMuc'] : 'Chưa tạo tài khoản'}}
                               </span>
                             </v-flex>
                         </v-layout>
-                        <div class="d-flex justify-space-between w-full pa-4 pb-2" v-if="thongTinCongDan && thongTinCongDan['danhTinhDienTu']">
-                            <v-btn v-if="thongTinCongDan['danhTinhDienTu']['tinhTrangSuDungTaiKhoan']['maMuc'] != 4 && thongTinCongDan['danhTinhDienTu']['tinhTrangSuDungTaiKhoan']['maMuc']" color="primary" small class="mt-3 mx-3 text-white">
-                                Đổi mật khẩu
+                        <div class="d-flex justify-space-between w-full pa-4 pb-2" v-if="thongTinCongDan">
+                            <v-btn v-if="thongTinCongDan['danhTinhDienTu'][0] && thongTinCongDan['danhTinhDienTu'][0]['tinhTrangSuDungTaiKhoan']['maMuc'] == 2"
+                             color="primary" small class="mt-3 mx-3 text-white" @click="showChangePass()">
+                              Đổi mật khẩu
                             </v-btn>
-                            <v-btn color="primary" v-if="!thongTinCongDan['danhTinhDienTu']['tinhTrangSuDungTaiKhoan']['maMuc']" small class="mt-3 mx-3 text-white" @click="showCreateAcc()">
+                            <v-btn color="primary" v-if="!thongTinCongDan['danhTinhDienTu'][0]" small class="mt-3 mx-3 text-white" @click="showCreateAcc()">
                                 Tạo tài khoản
                             </v-btn>
-                            <v-btn v-if="thongTinCongDan['danhTinhDienTu']['tinhTrangSuDungTaiKhoan']['maMuc'] == 1" color="primary" small class="mt-3 mx-3 text-white" @click="activeAccount()">
+                            <v-btn v-if="thongTinCongDan['danhTinhDienTu'][0] && thongTinCongDan['danhTinhDienTu'][0]['tinhTrangSuDungTaiKhoan']['maMuc'] == 1" color="primary" small class="mt-3 mx-3 text-white" @click="activeAccount()">
                                 Kích hoạt tài khoản
                             </v-btn>
-                            <v-btn v-if="thongTinCongDan['danhTinhDienTu']['tinhTrangSuDungTaiKhoan']['maMuc'] == 2" color="primary" small class="mt-3 mx-3 text-white" @click="blockAccount()">
+                            <v-btn v-if="thongTinCongDan['danhTinhDienTu'][0] && thongTinCongDan['danhTinhDienTu'][0]['tinhTrangSuDungTaiKhoan']['maMuc'] == 2" color="primary" small class="mt-3 mx-3 text-white" @click="blockAccount()">
                                 Khóa tài khoản
                             </v-btn>
-                            <v-btn v-if="thongTinCongDan['danhTinhDienTu']['tinhTrangSuDungTaiKhoan']['maMuc'] == 3" color="primary" small class="mt-3 mx-3 text-white" @click="unBlockAccount()">
+                            <v-btn v-if="thongTinCongDan['danhTinhDienTu'][0] && thongTinCongDan['danhTinhDienTu'][0]['tinhTrangSuDungTaiKhoan']['maMuc'] == 3" color="primary" small class="mt-3 mx-3 text-white" @click="unBlockAccount()">
                                 Mở khóa tài khoản
                             </v-btn>
                             <!-- <v-btn color="primary" small class="mt-3 mx-3 text-white">
                                 In phiếu
                             </v-btn> -->
                         </div>
-                        <div class="d-flex justify-space-between w-full pb-4 " v-if="thongTinCongDan && thongTinCongDan['danhTinhDienTu']">
-                          <v-btn color="primary" v-if="thongTinCongDan['danhTinhDienTu']['tinhTrangSuDungTaiKhoan']['maMuc'] == 3" small class="mt-3 mx-3 text-white" @click="deleteAccount()">
+                        <div class="d-flex justify-space-between w-full pb-4 " v-if="thongTinCongDan && thongTinCongDan['danhTinhDienTu'][0]">
+                          <v-btn color="primary" v-if="thongTinCongDan['danhTinhDienTu'][0] && thongTinCongDan['danhTinhDienTu'][0]['tinhTrangSuDungTaiKhoan']['maMuc'] == 3" small class="mt-3 mx-3 text-white" @click="deleteAccount()">
                             Xóa tài khoản
                           </v-btn>
                         </div>
@@ -189,6 +191,69 @@
                   mdi-content-save
                 </v-icon>
                 <span>Tạo tài khoản</span>
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-dialog
+          max-width="450"
+          v-model="dialogChangePass"
+          persistent
+        >
+          <v-card>
+            <v-toolbar
+              dark
+              color="primary"
+            >
+              <v-toolbar-title >Đổi mật khẩu</v-toolbar-title>
+              <v-spacer></v-spacer>
+              <v-toolbar-items>
+                <v-btn
+                  icon
+                  dark
+                  @click="dialogChangePass = false"
+                >
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+              </v-toolbar-items>
+            </v-toolbar>
+            <v-card-text class="mt-5">
+              <v-form
+                ref="formChangePass"
+                v-model="validFormChangePass"
+                lazy-validation
+              >
+                  <v-layout wrap>
+                    <v-flex xs12 class="mb-2">
+                      <div class="text-label mb-2">
+                        <span>Mật khẩu mới</span>
+                        <span class="red--text"> (*)</span>
+                      </div>
+                      <v-text-field
+                        class="input-form"
+                        v-model="passwordChange"
+                        solo
+                        dense
+                        :rules="required"
+                        required
+                        hide-details="auto"
+                      ></v-text-field>
+                    </v-flex>
+                  </v-layout>
+              </v-form>
+            </v-card-text>
+            <v-card-actions class="justify-end">
+              <v-btn color="red" class="white--text mr-2" :loading="loadingAction" :disabled="loadingAction" @click="dialogChangePass = false">
+                <v-icon left>
+                  mdi-close
+                </v-icon>
+                Thoát
+              </v-btn>
+              <v-btn class="mr-2" color="primary" :loading="loadingAction" :disabled="loadingAction" @click.native="submitChangePass">
+                <v-icon left>
+                  mdi-content-save
+                </v-icon>
+                <span>Xác nhận</span>
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -334,6 +399,9 @@ export default {
         thongTinCongDan: '',
         validFormAdd: true,
         dialogCreateAcc: false,
+        dialogChangePass: false,
+        validFormChangePass: true,
+        passwordChange: '',
         required: [
           v => (v !== '' && v !== null && v !== undefined) || 'Thông tin bắt buộc'
         ],
@@ -376,14 +444,41 @@ export default {
         vm.passwordCreate = ''
         vm.dialogCreateAcc = true
       },
+      showChangePass () {
+        let vm = this
+        vm.passwordChange = ''
+        vm.dialogChangePass = true
+      },
+      submitChangePass () {
+        let vm = this
+        if (vm.$refs.formChangePass.validate()) {
+          let filter = {
+            data: {
+              "tenDinhDanh": vm.thongTinCongDan['danhTinhDienTu'][0]['tenDinhDanh'],
+              "matKhauMoi": vm.passwordChange,
+              "type": "canhan"
+            }
+          }
+          vm.loadingAction = true
+          vm.$store.dispatch('changePass', filter).then(function (response) {
+            vm.loadingAction = false
+            vm.dialogChangePass = false
+            toastr.remove()
+            toastr.success('Đổi mật khẩu thành công')
+          }).catch(function () {
+            vm.loadingAction = false
+            toastr.remove()
+            toastr.error('Đổi mật khẩu thất bại')
+          })
+        }
+      },
       createAccount () {
         let vm = this
         if (vm.$refs.formCreateAcc.validate()) {
           let filter = {
             data: {
-              "maSoDinhDanh": vm.thongTinCongDan.maDinhDanh,
+              "maDinhDanh": vm.thongTinCongDan.maDinhDanh,
               "password": vm.passwordCreate,
-              "provider": "keycloak",
               "type": "canhan"
             }
           }
@@ -405,8 +500,7 @@ export default {
         let vm = this
         let filter = {
           data: {
-            "maSoDinhDanh": vm.thongTinCongDan.maDinhDanh,
-            "provider": "keycloak",
+            "tenDinhDanh": vm.thongTinCongDan['danhTinhDienTu'][0]['tenDinhDanh'],
             "type": "canhan"
           }
         }
@@ -427,8 +521,7 @@ export default {
         let vm = this
         let filter = {
           data: {
-            "maSoDinhDanh": vm.thongTinCongDan.maDinhDanh,
-            "provider": "keycloak",
+            "tenDinhDanh": vm.thongTinCongDan['danhTinhDienTu'][0]['tenDinhDanh'],
             "type": "canhan"
           }
         }
@@ -449,8 +542,7 @@ export default {
         let vm = this
         let filter = {
           data: {
-            "maSoDinhDanh": vm.thongTinCongDan.maDinhDanh,
-            "provider": "keycloak",
+            "tenDinhDanh": vm.thongTinCongDan['danhTinhDienTu'][0]['tenDinhDanh'],
             "type": "canhan"
           }
         }
@@ -479,8 +571,7 @@ export default {
             if (confirm == true) {
               let filter = {
                 data: {
-                  "maSoDinhDanh": vm.thongTinCongDan.maDinhDanh,
-                  "provider": "keycloak",
+                  "tenDinhDanh": vm.thongTinCongDan['danhTinhDienTu'][0]['tenDinhDanh'],
                   "type": "canhan"
                 }
               }
